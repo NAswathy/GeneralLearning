@@ -25,3 +25,23 @@ print("Even numbers:", n)
 
 p= [(person,age) for person, age in people if age > 18]
 print("People older than 18:", p)
+
+
+def sum_function(**kwargs):
+    total = 0
+    for i in kwargs.values():
+        total += i
+
+    return total
+print ("Sum using kwargs:", sum_function(a=1, b=2, c=3, d=4, e=5, f=6))    
+
+
+
+def sum_func_args(*args):
+    total = 0
+    for i in args:
+        total += i
+
+    return total
+
+print ("Sum using args:", sum_func_args(1, 2, 3, 4, 5, 6))

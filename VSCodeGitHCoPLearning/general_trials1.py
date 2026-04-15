@@ -35,7 +35,16 @@ def sum_function(**kwargs):
     return total
 print ("Sum using kwargs:", sum_function(a=1, b=2, c=3, d=4, e=5, f=6))    
 
+import enum
 
+import pandas as pd
+l=[1,1,2,2,2,3,4,1,5,2,7,9,8,6,5,4,3,2,1]
+pd.Series(l).value_counts().keys().tolist()[0]
+
+import numpy as np
+l=np.random.random_integers(1, 10, 10)
+print (l)
+print("Boolean array (== 5):", l == 5)
 
 def sum_func_args(*args):
     total = 0
@@ -45,3 +54,35 @@ def sum_func_args(*args):
     return total
 
 print ("Sum using args:", sum_func_args(1, 2, 3, 4, 5, 6))
+
+import enum
+class calculations(str, enum.Enum):
+    add = "add"
+    subtract = "subtract"
+    multiply = "multiply"
+    divide = "divide"
+
+    @staticmethod
+    def perform_calculation(a, b, operation):
+        if operation == calculations.add:
+            return a + b
+        elif operation == calculations.subtract:
+            return a - b
+        elif operation == calculations.multiply:
+            return a * b
+        elif operation == calculations.divide:
+            return a / b if b != 0 else "Error: Division by zero"
+        else:
+            return "Invalid operation"
+
+# Get user input
+print("Available operations:", [op.value for op in calculations])
+user_input = input("Enter operation (add, subtract, multiply, divide): ")
+
+try:
+    operation = calculations(user_input)
+    result = calculations.perform_calculation(10, 5, operation)
+    print(f"Result: {result}")
+except ValueError:
+    print("Invalid operation selected")
+

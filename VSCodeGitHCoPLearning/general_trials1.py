@@ -65,13 +65,13 @@ class calculations(str, enum.Enum):
     @staticmethod
     def perform_calculation(a, b, operation):
         if operation == calculations.add:
-            return a + b
+            return (a, b, a + b)
         elif operation == calculations.subtract:
-            return a - b
+            return (a, b, a - b)
         elif operation == calculations.multiply:
-            return a * b
+            return (a, b, a * b)
         elif operation == calculations.divide:
-            return a / b if b != 0 else "Error: Division by zero"
+            return (a, b, a / b) if b != 0 else "Error: Division by zero"
         else:
             return "Invalid operation"
 
@@ -86,3 +86,14 @@ try:
 except ValueError:
     print("Invalid operation selected")
 
+import asyncio
+import time
+
+async def my_func():
+    start = time.time()
+    sleep_func = asyncio.sleep(2)  # function called, but not awaited
+    print(time.time() - start)
+    await sleep_func  # actual await
+    print(time.time() - start)
+
+asyncio.run(my_func())

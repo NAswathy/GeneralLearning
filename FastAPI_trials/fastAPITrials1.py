@@ -43,7 +43,7 @@ def read_genes(param1: str, param2: Optional[str] = None):
     
      curs1 = conn1.cursor()
      print (param1, param2)
-     value= curs1.execute('''select * from transcript_SNP where NMid = ?''', (param1,param2)).fetchone()
+     value= curs1.execute('''select * from transcript_SNP where NMid = ?''', (param1,)).fetchone()
      conn1.commit()
      return {"Message": f"selected" + str(value) + " from the database., param2 is " + str(param2), "param1": param1}
 

@@ -1,0 +1,10 @@
+#!/bin/sh
+'''exec' "/Users/aswathy.n/Library/CloudStorage/OneDrive-ThermoFisherScientific/Aswathy (1)/My_learning/programming_learning/GL_AIML/KeyAreas/GitHub_CICDLearning/Organise_gitRepo/GeneralLearning/agentTrials/venvAT/bin/python3" "$0" "$@"
+' '''
+# -*- coding: utf-8 -*-
+import re
+import sys
+from pip._internal.cli.main import main
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())

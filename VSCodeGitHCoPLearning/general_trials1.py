@@ -87,13 +87,23 @@ except ValueError:
     print("Invalid operation selected")
 
 import asyncio
-import time
+import nest_asyncio
 
-async def my_func():
-    start = time.time()
-    sleep_func = asyncio.sleep(2)  # function called, but not awaited
-    print(time.time() - start)
-    await sleep_func  # actual await
-    print(time.time() - start)
+async def task1():
+    print("Task 1 started")
+    sleep_time= asyncio.sleep(0.5) #function is being called but not awaited, so it won't block the execution of task2
+    await sleep_time #This is the actual await, statement that allows other tasks to run while task1 is sleeping
+    print("Task 1 finished")
 
-asyncio.run(my_func())
+async def task2():
+    print("Task 2 started")
+    await asyncio.sleep(1)
+    print("Task 2 finished")
+
+async def main():
+    await asyncio.gather(task1(), task2())  # Runs both tasks together
+
+nest_asyncio.apply()
+asyncio.run(main())
+
+

@@ -1,0 +1,8 @@
+#!/bin/sh
+'''exec' "/Users/aswathy.n/Library/CloudStorage/OneDrive-ThermoFisherScientific/Aswathy (1)/My_learning/programming_learning/GL_AIML/KeyAreas/GitHub_CICDLearning/Organise_gitRepo/GeneralLearning/agentTrials/venvAT/bin/python3" "$0" "$@"
+' '''
+import sys
+from numpy._configtool import main
+if __name__ == '__main__':
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
+    sys.exit(main())

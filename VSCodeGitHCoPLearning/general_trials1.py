@@ -41,6 +41,22 @@ import pandas as pd
 l=[1,1,2,2,2,3,4,1,5,2,7,9,8,6,5,4,3,2,1]
 pd.Series(l).value_counts().keys().tolist()[0]
 
+import pandas as pd
+L1 = [1, 2, 2, 3, 2, 3, 4, 5]
+print (pd.Series(L1).value_counts().keys().tolist()[0])
+
+
+from collections import Counter
+mostFreq= Counter(L1).most_common(1)[0]
+print(mostFreq)
+
+
+for n in L1:
+    print (f"{n} appears {L1.count(n)} times")
+    
+
+print (set(M for M in L1 if L1.count(M) == max(L1.count(n) for n in L1)))
+
 import numpy as np
 l=np.random.random_integers(1, 10, 10)
 print (l)

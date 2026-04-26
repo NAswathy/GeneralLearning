@@ -1,100 +1,92 @@
-import random
+import asyncio
 import datetime
-import feedparser
-from typing import TypedDict, List
+import os
+import sys
+from pathlib import Path
 
-from langgraph.graph import StateGraph, START, END
+from dotenv import load_dotenv
 from langchain_ollama import ChatOllama
-from langchain_core.messages import SystemMessage, HumanMessage
+from langgraph.prebuilt import create_react_agent
 
 
-# -------- STATE --------
-class GKState(TypedDict, total=False):
-    topics: List[str]
-    selected_topics: List[str]
-    questions: str
+load_dotenv()
 
 
-# -------- LLM --------
-def get_llm():
+def get_llm() -> ChatOllama:
     return ChatOllama(
-        model="llama3",
-        temperature=0.3
+        model=os.getenv("OLLAMA_MODEL", "llama3"),
+        temperature=0.3,
     )
 
 
-# -------- STEP 1: FETCH TOPICS FROM INTERNET --------
-def fetch_topics(state: GKState) -> GKState:
-    feed = feedparser.parse("https://news.google.com/rss?hl=en-IN&gl=IN&ceid=IN:en")
-
-    topics = []
-    for entry in feed.entries[:20]:
-        title = entry.title
-        topics.append(title)
-
-    return {"topics": topics}
-
-
-# -------- STEP 2: SELECT DIVERSE TOPICS --------
-def select_topics(state: GKState) -> GKState:
-    topics = state["topics"]
-
-    # Shuffle and pick 5 diverse topics
-    random.shuffle(topics)
-    selected = topics[:5]
-
-    return {"selected_topics": selected}
+def get_server_config() -> dict:
+    server_path = Path(__file__).with_name("gk_news_mcp_server.py").resolve()
+    return {
+        "gk_news": {
+            "transport": "stdio",
+            "command": sys.executable,
+            "args": [str(server_path)],
+        }
+    }
 
 
-# -------- STEP 3: GENERATE QUESTIONS --------
-def generate_questions(state: GKState) -> GKState:
-    llm = get_llm()
-    topics = state["selected_topics"]
+async def load_mcp_tools():
+    try:
+        from langchain_mcp_adapters.client import MultiServerMCPClient
+    except ImportError as exc:
+        raise RuntimeError(
+            "Missing MCP adapter dependency. Install it with:\n"
+            "pip install langchain-mcp-adapters mcp"
+        ) from exc
+
+    client = MultiServerMCPClient(get_server_config())
+    return await client.get_tools()
+
+
+def extract_final_answer(result: dict) -> str:
+    for message in reversed(result.get("messages", [])):
+        if getattr(message, "type", "") == "ai":
+            content = getattr(message, "content", "")
+            if isinstance(content, str):
+                return content
+            if isinstance(content, list):
+                text_parts = [
+                    block.get("text", "")
+                    for block in content
+                    if isinstance(block, dict) and block.get("type") == "text"
+                ]
+                return "\n".join(part for part in text_parts if part).strip()
+    return "No final AI response was produced."
+
+
+async def main():
+    tools = await load_mcp_tools()
+    agent = create_react_agent(
+        model=get_llm(),
+        tools=tools,
+        prompt=(
+            "You are a general knowledge quiz generator. "
+            "Always use the available MCP news tool to gather current topics before writing questions. "
+            "Create 5 factual general knowledge questions with answers. "
+            "Each question must come from a different recent topic. "
+            "Keep each question and answer short and clear."
+        ),
+    )
 
     today = datetime.date.today().isoformat()
+    user_request = (
+        f"Today's date is {today}. "
+        "Use the MCP news tool to get recent headlines, choose 5 diverse topics, "
+        "and return exactly 5 numbered general knowledge questions with their answers."
+    )
 
-    prompt = [
-        SystemMessage(
-            content=(
-                "You are a quiz generator. Create general knowledge questions. "
-                "Each question must be factual, short, and from a different topic. "
-                "Do not repeat topics. Focus on current events and recent advancements. "
-                "Topics to consider include: current affairs, eminent personalities, scientific discoveries, historical events, etc."
-            )
-        ),
-        HumanMessage(
-            content=(
-                f"Today's date: {today}\n\n"
-                f"Generate 5 general knowledge questions based on these topics:\n{topics}\n\n"
-                "Return only numbered questions and the respective answers."
-            )
-        )
-    ]
+    result = await agent.ainvoke(
+        {"messages": [{"role": "user", "content": user_request}]}
+    )
 
-    response = llm.invoke(prompt).content
-    return {"questions": response}
+    print("\nDaily GK Questions via MCP + LangGraph:\n")
+    print(extract_final_answer(result))
 
 
-# -------- BUILD GRAPH --------
-def build_graph():
-    graph = StateGraph(GKState)
-
-    graph.add_node("fetch_topics", fetch_topics)
-    graph.add_node("select_topics", select_topics)
-    graph.add_node("generate_questions", generate_questions)
-
-    graph.add_edge(START, "fetch_topics")
-    graph.add_edge("fetch_topics", "select_topics")
-    graph.add_edge("select_topics", "generate_questions")
-    graph.add_edge("generate_questions", END)
-
-    return graph.compile()
-
-
-# -------- RUN --------
 if __name__ == "__main__":
-    app = build_graph()
-    result = app.invoke({})
-
-    print("\n🧠 Daily GK Questions:\n")
-    print(result["questions"])
+    asyncio.run(main())

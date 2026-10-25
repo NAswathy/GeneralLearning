@@ -1,0 +1,1555 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+
+body { font-family: Arial, Helvetica, sans-serif; font-size: 10.5pt; color: #222; line-height: 1.35; }
+h1 { font-size: 22pt; color: #404040; margin: 0 0 18px 0; border-bottom: 3px solid #cc0000; padding-bottom: 8px; }
+h2 { font-size: 15pt; color: #404040; margin-top: 22px; margin-bottom: 8px; border-bottom: 1px solid #d9d9d9; padding-bottom: 3px; }
+h3 { font-size: 12.5pt; color: #404040; margin-top: 16px; margin-bottom: 6px; }
+p { margin: 6px 0; }
+ul { margin: 4px 0 8px 22px; }
+li { margin: 3px 0; }
+table { border-collapse: collapse; width: 100%; margin: 8px 0 14px 0; page-break-inside: avoid; }
+th { background: #4f81bd; color: #ffffff; font-weight: bold; border: 1px solid #9eb6ce; padding: 6px; vertical-align: top; }
+td { border: 1px solid #bfbfbf; padding: 6px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7f9fc; }
+code { font-family: Consolas, Menlo, monospace; font-size: 9.5pt; background: #f2f2f2; }
+pre { font-family: Consolas, Menlo, monospace; font-size: 8.5pt; background: #f7f7f7; border: 1px solid #d9d9d9; padding: 8px; white-space: pre-wrap; }
+.meta { color: #555; }
+
+</style>
+</head>
+<body>
+<h1>UI Developer PRD: Antibody Product Series</h1>
+<p class="meta">Document date: July 23, 2026</p>
+<p class="meta">Audience: UI developers, QA engineers, product owners, business analysts, and integration teams</p>
+<p class="meta">Scope: Primary Antibodies, Secondary Antibodies, Isotype Controls, Proteins and Peptides, and ELISA Kits search and product detail pages</p>
+<p class="meta">Primary repo evidence: <code>thermofisher/magellan-search</code></p>
+<p class="meta">Supporting repo and service evidence: de-magellan repository list, local business rules documents, and service URLs configured in <code>magellan-search</code></p>
+<h2>1. Document Purpose</h2>
+<p>This PRD describes the UI behavior, business rules, functional architecture, workflow layers, module touchpoints, and integration expectations for the antibody product series search and product detail experiences.</p>
+<p>The document is written from a UI developer perspective. It identifies the repository, Java modules, view models, constants, configuration keys, service endpoints, feature flags, and important functions that drive the user interface.</p>
+<p>This document uses the previously generated business rules for the five product subtypes and code evidence from <code>thermofisher/magellan-search</code>. Rules or architectural details that were not directly visible in the available repo evidence are marked as validation items or assumptions instead of being invented.</p>
+<h2>2. Source Evidence and Review Boundary</h2>
+<h3>2.1 Reviewed local documents</h3>
+<ul>
+<li><code>Primary_Antibody_Product_Series_Business_Rules.docx</code></li>
+<li><code>Secondary_Antibody_Product_Series_Business_Rules.docx</code></li>
+<li><code>Isotype_Controls_Product_Series_Business_Rules.docx</code></li>
+<li><code>Proteins_Peptides_Product_Series_Business_Rules.docx</code></li>
+<li><code>ELISA_Product_Series_Business_Rules.docx</code></li>
+<li>Search business rules documents for the same product subtypes where present in the attached business rules package</li>
+<li><code>business-rule-extraction-prompt-v3.1.md</code></li>
+</ul>
+<h3>2.2 Reviewed repo</h3>
+<p>Primary code evidence was available from:</p>
+<ul>
+<li>Repository: <code>thermofisher/magellan-search</code></li>
+<li>Branch observed: <code>master</code></li>
+</ul>
+<p>Important reviewed files:</p>
+<ul>
+<li><code>src/main/java/com/lifetech/magellan/constants/ProductSubType.java</code></li>
+<li><code>src/main/resources/config.yaml</code></li>
+<li><code>src/main/java/com/lifetech/magellan/v2/productdetail/model/AntibodyProductDetailViewModel.java</code></li>
+<li><code>src/main/java/com/lifetech/magellan/v2/productdetail/util/PdpAeoMarkdownBuilder.java</code></li>
+<li><code>src/main/java/com/lifetech/magellan/v2/productdetail/constants/ProductDetailConstants.java</code></li>
+<li><code>src/main/java/com/lifetech/magellan/action/UnifiedCardProductTypeCountAction.java</code></li>
+<li><code>src/test/java/com/lifetech/magellan/v2/productdetail/util/PdpAeoMarkdownBuilderTest.java</code></li>
+<li><code>src/test/java/com/lifetech/magellan/v2/search/model/AntibodySearchResultsViewModelTest.java</code></li>
+</ul>
+<h3>2.3 Access limitation</h3>
+<p>The exact <code>de-magellan</code> team repository membership page was not directly available as a full machine-readable team list from the environment. The PRD therefore uses the accessible Magellan repo evidence, local rules package, and configured service integration names. Any implementation assignment across other de-magellan repos should be validated by repository owners before delivery planning.</p>
+<h2>3. Product Overview</h2>
+<h3>3.1 Product name</h3>
+<p>Antibody Product Series Search and Product Detail UI</p>
+<h3>3.2 Owner</h3>
+<p>Owner is not explicitly defined in the reviewed repo evidence. The functional ownership appears to sit across Magellan search, product detail, commerce, related products, Q and A, pricing, availability, and content service teams.</p>
+<h3>3.3 Purpose</h3>
+<p>The experience helps customers discover, compare, evaluate, and purchase antibody-related products. It supports search workflows, filters, product detail content, commerce actions, references, target biology information, related products, and support information.</p>
+<h3>3.4 Business goals</h3>
+<ul>
+<li>Allow customers to find relevant antibody-related products by keyword, target, application, species, host, conjugate, and subtype.</li>
+<li>Present PDP content that supports scientific selection and purchase confidence.</li>
+<li>Show correct package-specific price, availability, cart eligibility, lifecycle messages, and documentation.</li>
+<li>Provide subtype-specific biological content such as bioinformatics, target information, citations, and product specifications.</li>
+<li>Support cross-sell and discovery through related products and alternate search.</li>
+<li>Enable country, language, login, entitlement, and configuration-based UI behavior.</li>
+</ul>
+<h3>3.5 In scope</h3>
+<ul>
+<li>Search pages for:</li>
+<li>Primary Antibodies</li>
+<li>Secondary Antibodies</li>
+<li>Isotype Controls</li>
+<li>Proteins and Peptides</li>
+<li>ELISA Kits</li>
+<li>PDP pages for the same product subtypes</li>
+<li>Commerce card behavior including price, availability, quantity, orderability, and Add to Cart eligibility</li>
+<li>Banner behavior near product title</li>
+<li>Product specifications and product-specific content</li>
+<li>Bioinformatics and target information</li>
+<li>References and scholarly article rendering</li>
+<li>Questions and Answers</li>
+<li>Related products</li>
+<li>Developer-facing architecture, modules, functions, service endpoints, and data flow</li>
+</ul>
+<h3>3.6 Out of scope</h3>
+<ul>
+<li>TaqMan assay and array pages</li>
+<li>Admin catalog authoring screens</li>
+<li>Backend service implementation details outside interfaces/configuration visible from reviewed code</li>
+<li>Final UX copy approval and visual design token decisions unless explicitly stated in business rules</li>
+</ul>
+<h2>4. Product Subtypes and Routes</h2>
+<table>
+<tr>
+<th>Subtype</th>
+<th>Search example</th>
+<th>PDP example</th>
+<th>ProductSubType enum</th>
+<th>Product type</th>
+<th>Product subtype value</th>
+<th>Main URL behavior</th>
+</tr>
+<tr>
+<td>Primary Antibody</td>
+<td><code>/antibody/primary/query/*</code></td>
+<td><code>/antibody/product/Ki-67-Antibody-clone-SP6-Recombinant-Monoclonal/MA5-14520</code></td>
+<td><code>ANTIBODY_PRIMARY</code></td>
+<td><code>antibody</code></td>
+<td><code>antibody_primary</code></td>
+<td>Search path <code>/antibody/primary/</code>; PDP base <code>/antibody/product/</code></td>
+</tr>
+<tr>
+<td>Secondary Antibody</td>
+<td><code>/antibody/secondary/query/*</code></td>
+<td><code>/antibody/product/Goat-anti-Rabbit-IgG-H-L-Cross-Adsorbed-Secondary-Antibody-Polyclonal/A-11008</code></td>
+<td><code>ANTIBODY_SECONDARY</code></td>
+<td><code>antibody</code></td>
+<td><code>antibody_secondary</code></td>
+<td>Search path <code>/antibody/secondary/</code>; PDP base <code>/antibody/product/</code></td>
+</tr>
+<tr>
+<td>Isotype Control</td>
+<td><code>/antibody/control/query/*</code></td>
+<td><code>/antibody/product/Rabbit-IgG-Isotype-Control/02-6102</code></td>
+<td><code>ANTIBODY_CONTROL</code></td>
+<td><code>antibody</code></td>
+<td><code>antibody_control</code></td>
+<td>Search path <code>/antibody/control/</code>; PDP base <code>/antibody/product/</code></td>
+</tr>
+<tr>
+<td>Proteins and Peptides</td>
+<td><code>/proteins/query/*</code></td>
+<td><code>/proteins/product/Human-FGF-basic-FGF-2-bFGF-154-aa-Recombinant-Protein/100-18B-50UG</code></td>
+<td><code>ANTIBODY_PROTEIN</code></td>
+<td><code>antibody</code></td>
+<td><code>antibody_protein</code></td>
+<td>Uses <code>/proteins/product/</code> and <code>/proteins/</code> when new protein URL flags are enabled</td>
+</tr>
+<tr>
+<td>ELISA Kits</td>
+<td><code>/elisa/query/*</code></td>
+<td><code>/elisa/product/Human-IL-18-ProQuantum-Immunoassay-Kit/A35613</code></td>
+<td><code>ELISA</code></td>
+<td><code>immunoassay</code></td>
+<td><code>ELISA</code></td>
+<td>Uses <code>/elisa/product/</code>, <code>/elisa/</code>, and target URL switching based on ELISA TFP flag</td>
+</tr>
+</table>
+<h2>5. Users and Stakeholders</h2>
+<h3>5.1 User personas</h3>
+<table>
+<tr>
+<th>Persona</th>
+<th>Need</th>
+</tr>
+<tr>
+<td>Research scientist</td>
+<td>Find scientifically appropriate products quickly using target, species, application, host, conjugate, assay, validation, and reference evidence.</td>
+</tr>
+<tr>
+<td>Procurement user</td>
+<td>Confirm catalog number, package size, price, availability, orderability, and cart eligibility.</td>
+</tr>
+<tr>
+<td>Lab manager</td>
+<td>Compare options, evaluate related products, validate target and application fit, and ensure purchasing continuity.</td>
+</tr>
+<tr>
+<td>Support specialist</td>
+<td>Explain product lifecycle, availability, technical resources, Q and A, protocols, and documentation.</td>
+</tr>
+<tr>
+<td>SEO/AEO consumer</td>
+<td>Receive structured, complete PDP content through schema, canonical URLs, and markdown/JSON-LD outputs.</td>
+</tr>
+</table>
+<h3>5.2 Stakeholders</h3>
+<ul>
+<li>Product owner for antibody search and PDP</li>
+<li>UI engineering team</li>
+<li>Search engineering team</li>
+<li>Product detail and catalog service owners</li>
+<li>Pricing and availability service owners</li>
+<li>Q and A service owner</li>
+<li>Related products service owner</li>
+<li>Content, SEO, and AEO stakeholders</li>
+<li>QA automation and regression teams</li>
+<li>Customer support and technical support teams</li>
+</ul>
+<h2>6. Repository and Module Map</h2>
+<h3>6.1 Primary repository</h3>
+<table>
+<tr>
+<th>Repository</th>
+<th>Role in this PRD</th>
+</tr>
+<tr>
+<td><code>thermofisher/magellan-search</code></td>
+<td>Main evidence source for product subtype routing, search behavior, PDP view model logic, markdown/AEO content generation, feature flags, endpoint configuration, and tests.</td>
+</tr>
+</table>
+<h3>6.2 Supporting services inferred from configuration</h3>
+<table>
+<tr>
+<th>Service or component</th>
+<th>Evidence</th>
+<th>UI relevance</th>
+</tr>
+<tr>
+<td>Product service</td>
+<td><code>productSearchCountAPI</code>, <code>newCatalogAPI</code>, <code>fetchRelatedProductDetailsUrl</code></td>
+<td>Search counts, catalog data, related product details, PDP package data.</td>
+</tr>
+<tr>
+<td>Pricing API</td>
+<td><code>newPricingApi</code>, <code>useMagellanPricingAPI</code>, <code>newPricingApiEnabledProducts</code></td>
+<td>Product commerce card price rendering and orderability messaging.</td>
+</tr>
+<tr>
+<td>Availability API</td>
+<td><code>newAvailabilityAPI</code>, <code>inventoryDataServiceUrl</code>, <code>enableEstimatedAvailability</code></td>
+<td>Availability panel and delivery/stock messaging.</td>
+</tr>
+<tr>
+<td>Related products service/UI</td>
+<td><code>relatedSkuListApiUrl</code>, <code>relatedProductsModuleURL</code>, <code>relatedProductsWidgetV2</code></td>
+<td>Related products widgets on PDP.</td>
+</tr>
+<tr>
+<td>Q and A service/UI</td>
+<td><code>qAndAServiceApiUrl</code>, <code>qnaWidgetAPI</code>, <code>aeoQnaApiBaseUrl</code>, <code>qnaModuleEnabled</code></td>
+<td>Questions and Answers module and AEO content.</td>
+</tr>
+<tr>
+<td>Promotions APIs</td>
+<td><code>promotionAvailabilityAPI</code>, <code>promoSuggestionApiPath</code>, <code>promotionSuggestionsApiEnabled</code></td>
+<td>Promo banners and commerce recommendations.</td>
+</tr>
+<tr>
+<td>CiteAb integration</td>
+<td><code>CiteAbService</code>, citation display functions</td>
+<td>References count and scholarly article fallback.</td>
+</tr>
+<tr>
+<td>Documents/certificates service</td>
+<td><code>CertificatesDocumentsResponse</code></td>
+<td>Data sheet, certificates, and documents sections.</td>
+</tr>
+</table>
+<h3>6.3 Important Java modules and functions</h3>
+<table>
+<tr>
+<th>Module</th>
+<th>Important functions</th>
+<th>Developer purpose</th>
+</tr>
+<tr>
+<td><code>ProductSubType.java</code></td>
+<td>enum values, <code>getBaseUrl</code>, <code>getSearchURL</code>, <code>getDisplayText</code>, <code>getLinkUrl</code>, <code>isCitationDisplayed</code>, <code>isBioInformaticDisplayed</code>, <code>isQnAEnabled</code>, <code>isRelatedProductsEnabled</code>, <code>isBidProduct</code>, <code>isTargetAvailable</code></td>
+<td>Defines subtype routing, labels, alternate search, feature eligibility, and subtype-specific behavior.</td>
+</tr>
+<tr>
+<td><code>AntibodyProductDetailViewModel.java</code></td>
+<td><code>getAntibodyProductPropertiesDefaultMap</code>, <code>getAntibodyProductSpecificationsTableMap</code>, <code>isShowBio</code>, <code>isQuestionsAndAnswersEnabled</code>, <code>isQuestionsAndAnswersEnabledCountries</code>, <code>isV2RelatedProductsEnabled</code>, <code>getRelatedProductsModuleURL</code>, <code>getShowProtocolsLink</code>, <code>getAdvancedVerificationLink</code>, <code>getTargetNameLink</code></td>
+<td>Main PDP view model logic for antibody, protein, isotype, secondary, and primary product sections.</td>
+</tr>
+<tr>
+<td><code>PdpAeoMarkdownBuilder.java</code></td>
+<td><code>build</code>, <code>appendCoreSections</code>, <code>appendPricingDetails</code>, <code>appendPromotionsSection</code>, <code>appendHeroDetails</code>, <code>appendProductSpecifications</code>, <code>appendProductDetailSection</code>, <code>appendBioinformaticsDetails</code>, <code>appendRelatedProducts</code>, <code>appendQuestionsAndAnswers</code>, <code>resolveBreadcrumbPath</code></td>
+<td>Builds structured PDP content for AEO/SEO and mirrors many sections the UI must render.</td>
+</tr>
+<tr>
+<td><code>ProductDetailConstants.java</code></td>
+<td>section labels, status labels, URL prefixes, config keys</td>
+<td>Single source of text constants and path fragments used by PDP output.</td>
+</tr>
+<tr>
+<td><code>UnifiedCardProductTypeCountAction.java</code></td>
+<td><code>execute</code>, <code>createProductDetails</code>, <code>getSearchModel</code>, <code>updateCountBySiteSearchService</code>, <code>processUnifiedCardForSearchCount</code></td>
+<td>Search landing and unified product count behavior.</td>
+</tr>
+<tr>
+<td><code>PdpAeoMarkdownBuilderTest.java</code></td>
+<td>tests for RRID, Advanced Verification, ELISA content, bioinformatics, citations, CiteAb fallback</td>
+<td>Confirms important PDP rules and expected rendering behavior.</td>
+</tr>
+<tr>
+<td><code>AntibodySearchResultsViewModelTest.java</code></td>
+<td>tests for result text, target pages, filters, canonical URLs, image search, antigen search, alternate search</td>
+<td>Confirms search page and target family behavior.</td>
+</tr>
+</table>
+<h2>7. Functional Architecture</h2>
+<h3>7.1 High-level architecture</h3>
+<pre>Level 0: Customer-facing experience
+
+Customer Browser
+  |
+  +-- Search Pages
+  |     |
+  |     +-- Primary Antibody Search
+  |     +-- Secondary Antibody Search
+  |     +-- Isotype Control Search
+  |     +-- Proteins and Peptides Search
+  |     +-- ELISA Search
+  |
+  +-- Product Detail Pages
+        |
+        +-- PDP Header and Banner
+        +-- Product Content Tabs and Sections
+        +-- Commerce Card
+        +-- References and Bioinformatics
+        +-- Related Products
+        +-- Questions and Answers</pre>
+<pre>Level 1 and Level 2: UI to backend flow
+
+Browser route
+  |
+  +-- Route parser / controller
+  |     |
+  |     +-- Resolve product type and subtype
+  |     |     +-- ProductSubType enum
+  |     |     +-- Feature flags from config.yaml
+  |     |     +-- Country/language/session context
+  |     |
+  |     +-- Search page path
+  |     |     |
+  |     |     +-- Build SearchModel
+  |     |     |     +-- keyword
+  |     |     |     +-- subtype
+  |     |     |     +-- filters
+  |     |     |     +-- pagination and result count
+  |     |     |
+  |     |     +-- Call SearchResultsService
+  |     |     |     +-- Solr/product index
+  |     |     |     +-- spellcheck
+  |     |     |     +-- alternate subtype search counts
+  |     |     |
+  |     |     +-- Render UI
+  |     |           +-- result header
+  |     |           +-- filters
+  |     |           +-- product cards
+  |     |           +-- alternate results
+  |     |           +-- image or antigen search entry points
+  |     |
+  |     +-- PDP path
+  |           |
+  |           +-- Build ProductDetailViewModel
+  |           |     +-- product identity
+  |           |     +-- package list
+  |           |     +-- specifications
+  |           |     +-- bioinformatics
+  |           |     +-- references
+  |           |
+  |           +-- Enrich sections
+  |           |     +-- price and availability
+  |           |     +-- documents and certificates
+  |           |     +-- related products
+  |           |     +-- Q and A
+  |           |     +-- promotions
+  |           |
+  |           +-- Render PDP UI
+  |                 +-- title/banner
+  |                 +-- package selector
+  |                 +-- commerce card
+  |                 +-- product details
+  |                 +-- specifications
+  |                 +-- target and bioinformatics
+  |                 +-- references
+  |                 +-- related products
+  |                 +-- Q and A</pre>
+<h3>7.2 Search workflow diagram</h3>
+<pre>Search route: /antibody/{subtype}/query/*, /proteins/query/*, /elisa/query/*
+  |
+  +-- L1: Request interpretation
+  |     |
+  |     +-- L2: Resolve subtype
+  |     |     +-- ANTIBODY_PRIMARY
+  |     |     +-- ANTIBODY_SECONDARY
+  |     |     +-- ANTIBODY_CONTROL
+  |     |     +-- ANTIBODY_PROTEIN
+  |     |     +-- ELISA
+  |     |
+  |     +-- L2: Validate keyword
+  |     |     +-- allow wildcard example *
+  |     |     +-- enforce maxKeywordLength = 250
+  |     |     +-- escape output keyword before response
+  |     |
+  |     +-- L2: Apply country/language context
+  |           +-- current country
+  |           +-- current language
+  |           +-- login state where relevant
+  |
+  +-- L1: Search assembly
+  |     |
+  |     +-- L2: Result count configuration
+  |     |     +-- primary: 25 desktop, 10 mobile/TFP
+  |     |     +-- secondary: 25
+  |     |     +-- isotype: 50
+  |     |     +-- protein: 50
+  |     |     +-- ELISA: 50
+  |     |
+  |     +-- L2: Feature flags
+  |     |     +-- new filters enabled for all five subtypes
+  |     |     +-- spellcheck enabled for primary, secondary, control, ELISA
+  |     |     +-- typeahead enabled for primary, protein, ELISA
+  |     |     +-- keep-my-filters enabled for all five subtypes
+  |     |
+  |     +-- L2: Search service call
+  |           +-- SearchResultsService.getResults
+  |           +-- product/service count APIs where configured
+  |           +-- Solr re-query for enabled subtypes
+  |
+  +-- L1: UI response
+        |
+        +-- L2: Header
+        |     +-- blank keyword shows generic result count
+        |     +-- wildcard keyword shows results for &quot;*&quot;
+        |     +-- target context adds target/application postfix
+        |
+        +-- L2: Filter panel
+        |     +-- subtype-specific filters
+        |     +-- selected filter state
+        |     +-- no-exact-match preselected filter handling
+        |
+        +-- L2: Result list
+        |     +-- cards
+        |     +-- pagination
+        |     +-- sorting where available
+        |
+        +-- L2: Empty or alternate search
+              +-- show alternate subtype links when counts are available
+              +-- show no-result state when no alternate model is available</pre>
+<h3>7.3 PDP workflow diagram</h3>
+<pre>PDP route: /antibody/product/{slug}/{sku}, /proteins/product/{slug}/{sku}, /elisa/product/{slug}/{sku}
+  |
+  +-- L1: Product identity
+  |     |
+  |     +-- L2: Resolve sku/webId
+  |     +-- L2: Resolve ProductSubType
+  |     +-- L2: Resolve canonical URL
+  |     +-- L2: Resolve breadcrumbs and target URL
+  |
+  +-- L1: Product content model
+  |     |
+  |     +-- L2: Product title, brand, target, host, clone, conjugate
+  |     +-- L2: Package list and selected package
+  |     +-- L2: Product specifications table
+  |     +-- L2: Product-specific information
+  |     +-- L2: Target information
+  |     +-- L2: Bioinformatics
+  |     +-- L2: References and images/figures
+  |
+  +-- L1: Commerce model
+  |     |
+  |     +-- L2: Pricing request for selected package
+  |     +-- L2: Availability request for selected package and quantity
+  |     +-- L2: Lifecycle status check
+  |     +-- L2: Add to Cart eligibility
+  |     +-- L2: Promotions
+  |
+  +-- L1: External PDP modules
+  |     |
+  |     +-- L2: Related products
+  |     +-- L2: Questions and Answers
+  |     +-- L2: Documents and certificates
+  |     +-- L2: Technical support or protocols links
+  |
+  +-- L1: Rendered page
+        |
+        +-- L2: Product title and lifecycle/banner area
+        +-- L2: Package selector
+        +-- L2: Price, availability, quantity, cart panel
+        +-- L2: Details/specifications/content tabs
+        +-- L2: Scientific validation and support sections</pre>
+<h3>7.4 Commerce card workflow diagram</h3>
+<pre>Selected PDP package
+  |
+  +-- L1: Package selection state
+  |     |
+  |     +-- L2: selected catalog number/webId
+  |     +-- L2: package size and child SKU list
+  |     +-- L2: data sheet/catalog link refresh
+  |     +-- L2: package-specific banner refresh
+  |
+  +-- L1: Price
+  |     |
+  |     +-- L2: call pricing API when product type and country are enabled
+  |     +-- L2: display currency and list price when available
+  |     +-- L2: handle no-price state for anonymous or entitled users
+  |     +-- L2: remove child SKUs for configured pricing error codes while preserving parent display
+  |
+  +-- L1: Availability
+  |     |
+  |     +-- L2: call new availability API when enabled
+  |     +-- L2: show in-stock when available quantity is greater than zero
+  |     +-- L2: show estimated or pending states when exact quantity is not present
+  |     +-- L2: vary behavior by login/country/dealer state where configured
+  |
+  +-- L1: Add to Cart
+        |
+        +-- L2: require orderable selected package
+        +-- L2: block discontinued and long-term unavailable products
+        +-- L2: enforce quantity 1 through 9999
+        +-- L2: use selected webId as cart item identity</pre>
+<h3>7.5 Scientific content workflow diagram</h3>
+<pre>ProductDetailViewModel
+  |
+  +-- L1: Product specifications
+  |     |
+  |     +-- L2: Build ordered map from subtype view model
+  |     +-- L2: Remove empty values
+  |     +-- L2: Apply subtype rules
+  |     |     +-- proteins use Species instead of Species Reactivity
+  |     |     +-- proteins omit host/isotype
+  |     |     +-- target/cross adsorption/antibody form require target availability
+  |     |
+  |     +-- L2: Render RRID as Antibody Registry link when present
+  |
+  +-- L1: Bioinformatics
+  |     |
+  |     +-- L2: Check subtype bioinformatics flag
+  |     +-- L2: Check isShowBio content availability
+  |     +-- L2: Render protein aliases, gene aliases, UniProt, Entrez Gene ID
+  |     +-- L2: Render functions/processes and Panther URLs where present
+  |
+  +-- L1: Target information
+  |     |
+  |     +-- L2: target name
+  |     +-- L2: target list
+  |     +-- L2: product description
+  |     +-- L2: target-family URL when enabled
+  |
+  +-- L1: References
+  |     |
+  |     +-- L2: display product reference count
+  |     +-- L2: prefer CiteAb count when eligible and count is positive
+  |     +-- L2: render JSON-LD scholarly articles when available
+  |     +-- L2: fallback to CiteAb titles when JSON-LD is unavailable and citation display is enabled
+  |
+  +-- L1: Q and A
+        |
+        +-- L2: require qnaModuleEnabled
+        +-- L2: require subtype Q and A enabled
+        +-- L2: require enabled country list
+        +-- L2: load widget/API content using configured endpoints</pre>
+<h2>8. Core Search Requirements</h2>
+<h3>8.1 Common search requirements</h3>
+<table>
+<tr>
+<th>Requirement ID</th>
+<th>Requirement</th>
+<th>Source evidence</th>
+</tr>
+<tr>
+<td>SR-001</td>
+<td>The UI must resolve each search route to the correct <code>ProductSubType</code> and display label.</td>
+<td><code>ProductSubType.java</code></td>
+</tr>
+<tr>
+<td>SR-002</td>
+<td>The search keyword must be carried into the search model and escaped before rendering in user-visible response text.</td>
+<td><code>UnifiedCardProductTypeCountAction.execute</code></td>
+</tr>
+<tr>
+<td>SR-003</td>
+<td>The maximum keyword length must follow <code>maxKeywordLength</code>, configured as <code>250</code>.</td>
+<td><code>config.yaml</code></td>
+</tr>
+<tr>
+<td>SR-004</td>
+<td>Result count per page must use subtype configuration.</td>
+<td><code>resultCountForProductSubTypes</code>, <code>resultCountForProductSubTypesForMobileAndTFP</code></td>
+</tr>
+<tr>
+<td>SR-005</td>
+<td>New filters must be enabled for Primary, Secondary, Isotype Control, Proteins and Peptides, and ELISA when configured.</td>
+<td><code>newFilterEnabledProductSubTypes</code></td>
+</tr>
+<tr>
+<td>SR-006</td>
+<td>Keep-my-filters behavior must be available for all five subtypes when configured.</td>
+<td><code>keepMyFiltersEnabledSubTypes</code></td>
+</tr>
+<tr>
+<td>SR-007</td>
+<td>Spellcheck must be available for Primary, Secondary, Isotype Control, and ELISA when configured.</td>
+<td><code>spellCheckEnabledSubTypes</code></td>
+</tr>
+<tr>
+<td>SR-008</td>
+<td>Typeahead must be available for Primary, Proteins and Peptides, and ELISA when configured.</td>
+<td><code>newTypeAheadEnabledProductSubTypes</code></td>
+</tr>
+<tr>
+<td>SR-009</td>
+<td>Alternate search links must be displayed when zero or low-result conditions have available alternate subtype counts.</td>
+<td><code>ProductSubType.java</code>, <code>AntibodySearchResultsViewModelTest.java</code></td>
+</tr>
+<tr>
+<td>SR-010</td>
+<td>Search result header text must adapt for blank keyword, wildcard keyword, normal keyword, and target/application context.</td>
+<td><code>AntibodySearchResultsViewModelTest.java</code></td>
+</tr>
+</table>
+<h3>8.2 Subtype search behavior</h3>
+<table>
+<tr>
+<th>Subtype</th>
+<th>Search result count</th>
+<th>Typeahead</th>
+<th>Spellcheck</th>
+<th>Special search behavior</th>
+</tr>
+<tr>
+<td>Primary Antibody</td>
+<td>25 desktop; 10 mobile/TFP</td>
+<td>Enabled</td>
+<td>Enabled</td>
+<td>Image search and antigen/epitope search entry points are enabled when family page and config allow them.</td>
+</tr>
+<tr>
+<td>Secondary Antibody</td>
+<td>25</td>
+<td>Not enabled through new typeahead list</td>
+<td>Enabled</td>
+<td>CiteAb widget is enabled at subtype level; target availability is true.</td>
+</tr>
+<tr>
+<td>Isotype Control</td>
+<td>50</td>
+<td>Not enabled through new typeahead list</td>
+<td>Enabled</td>
+<td>CiteAb widget is enabled at subtype level; alternate search to antibodies/proteins/ELISA is configured.</td>
+</tr>
+<tr>
+<td>Proteins and Peptides</td>
+<td>50</td>
+<td>Enabled</td>
+<td>Not listed in spellcheck config</td>
+<td>Uses new protein URLs when flags are enabled; protein family search count is required when TFP protein flag is enabled.</td>
+</tr>
+<tr>
+<td>ELISA Kits</td>
+<td>50</td>
+<td>Enabled</td>
+<td>Enabled</td>
+<td>Uses immunoassay collection and ELISA target URL switching when ELISA TFP flag is enabled.</td>
+</tr>
+</table>
+<h3>8.3 Search acceptance criteria</h3>
+<ul>
+<li>Given a user opens <code>/antibody/primary/query/*</code>, the UI loads Primary Antibody search results using <code>ANTIBODY_PRIMARY</code>.</li>
+<li>Given a user opens <code>/proteins/query/*</code>, the UI loads Proteins and Peptides results and uses the new protein URL behavior when enabled.</li>
+<li>Given a wildcard keyword is used, the header text includes results for <code>&quot;*&quot;</code>.</li>
+<li>Given a blank keyword is used, the header shows a generic count without a keyword phrase.</li>
+<li>Given no exact match is available but preselected filters exist, the UI preserves and displays relevant filter state.</li>
+<li>Given alternate subtype counts exist, the UI displays links to alternate product categories with formatted counts.</li>
+<li>Given no results and no alternate model, the UI displays a no-result state rather than an empty product list.</li>
+</ul>
+<h2>9. Core PDP Requirements</h2>
+<h3>9.1 PDP page frame</h3>
+<table>
+<tr>
+<th>Requirement ID</th>
+<th>Requirement</th>
+<th>Source evidence</th>
+</tr>
+<tr>
+<td>PDP-001</td>
+<td>The PDP must resolve product identity by SKU/webId and subtype.</td>
+<td>Product detail view model usage</td>
+</tr>
+<tr>
+<td>PDP-002</td>
+<td>The PDP must render canonical and breadcrumb URLs using subtype-specific route rules.</td>
+<td><code>resolveBreadcrumbPath</code>, <code>getCanonicalHrefPath</code></td>
+</tr>
+<tr>
+<td>PDP-003</td>
+<td>Product title, brand, product ID, package options, and selected package must be visible or available to the UI.</td>
+<td>Business rules, <code>AntibodyProductDetailViewModel</code></td>
+</tr>
+<tr>
+<td>PDP-004</td>
+<td>Lifecycle banner messages must respond to product/package status such as discontinued and long-term unavailable.</td>
+<td>Business rules, status constants</td>
+</tr>
+<tr>
+<td>PDP-005</td>
+<td>Banner dismissal must hide the banner on the client without changing product/package selection state.</td>
+<td>Business rules</td>
+</tr>
+</table>
+<h3>9.2 Product commerce card</h3>
+<table>
+<tr>
+<th>Requirement ID</th>
+<th>Requirement</th>
+<th>Source evidence</th>
+</tr>
+<tr>
+<td>COM-001</td>
+<td>The selected package must drive SKU, data sheet, catalog links, price, availability, and banner refresh.</td>
+<td>Business rules</td>
+</tr>
+<tr>
+<td>COM-002</td>
+<td>Pricing must use the selected package webId/SKU and display currency and list price when pricing details are present.</td>
+<td><code>appendPricingDetails</code></td>
+</tr>
+<tr>
+<td>COM-003</td>
+<td>Pricing is enabled for antibody and immunoassay product types through config.</td>
+<td><code>newPricingApiEnabledProducts</code></td>
+</tr>
+<tr>
+<td>COM-004</td>
+<td>Anonymous users may see sign-in driven price/availability prompts when exact price is unavailable.</td>
+<td>Business rules</td>
+</tr>
+<tr>
+<td>COM-005</td>
+<td>Long-term unavailable products must not allow normal ordering and should show Contact Us behavior where defined.</td>
+<td>Business rules</td>
+</tr>
+<tr>
+<td>COM-006</td>
+<td>Discontinued products must not allow ordering.</td>
+<td>Business rules, status constants</td>
+</tr>
+<tr>
+<td>COM-007</td>
+<td>Add to Cart requires a valid selected package, orderable status, and quantity within allowed limits.</td>
+<td>Business rules</td>
+</tr>
+<tr>
+<td>COM-008</td>
+<td>Quantity must be constrained to 1 through 9999.</td>
+<td>Business rules</td>
+</tr>
+<tr>
+<td>COM-009</td>
+<td>Availability must be refreshed when package or quantity changes.</td>
+<td>Business rules, availability config</td>
+</tr>
+<tr>
+<td>COM-010</td>
+<td>Availability must respect country/login/dealer rules where configured.</td>
+<td>Business rules, availability config</td>
+</tr>
+</table>
+<h3>9.3 Banner near product title</h3>
+<table>
+<tr>
+<th>Requirement ID</th>
+<th>Requirement</th>
+<th>Source evidence</th>
+</tr>
+<tr>
+<td>BAN-001</td>
+<td>The PDP must display lifecycle messages near the product title when product or package status requires it.</td>
+<td>Business rules</td>
+</tr>
+<tr>
+<td>BAN-002</td>
+<td>Package-specific messages must change when package selection changes.</td>
+<td>Business rules</td>
+</tr>
+<tr>
+<td>BAN-003</td>
+<td>The banner must support close/dismiss behavior without mutating underlying product state.</td>
+<td>Business rules</td>
+</tr>
+<tr>
+<td>BAN-004</td>
+<td>Backend banner messages are feature-flag controlled.</td>
+<td><code>bannerMessagesEnabled</code>, <code>backendBannerEnabled</code></td>
+</tr>
+</table>
+<h3>9.4 Product specifications</h3>
+<table>
+<tr>
+<th>Requirement ID</th>
+<th>Requirement</th>
+<th>Source evidence</th>
+</tr>
+<tr>
+<td>SPEC-001</td>
+<td>The product specifications table must omit empty values.</td>
+<td><code>getABPopulateMap</code>, <code>appendProductSpecifications</code></td>
+</tr>
+<tr>
+<td>SPEC-002</td>
+<td>Primary, Secondary, and Isotype products must use antibody-specific labels such as Species Reactivity where applicable.</td>
+<td><code>getAntibodyProductSpecificationsTableMap</code></td>
+</tr>
+<tr>
+<td>SPEC-003</td>
+<td>Proteins and Peptides must use <code>Species</code> instead of <code>Species Reactivity</code>.</td>
+<td><code>getAntibodyProductSpecificationsTableMap</code></td>
+</tr>
+<tr>
+<td>SPEC-004</td>
+<td>Proteins and Peptides must omit host and isotype.</td>
+<td><code>getAntibodyProductSpecificationsTableMap</code></td>
+</tr>
+<tr>
+<td>SPEC-005</td>
+<td>Shipping condition must appear only when <code>enableShippingCondition</code> is enabled.</td>
+<td><code>getAntibodyProductSpecificationsTableMap</code></td>
+</tr>
+<tr>
+<td>SPEC-006</td>
+<td>RRID must render as an Antibody Registry link when present.</td>
+<td><code>appendProductSpecifications</code>, tests</td>
+</tr>
+<tr>
+<td>SPEC-007</td>
+<td>Target, cross adsorption, and antibody form must render only when the subtype marks target as available.</td>
+<td><code>productSubType.isTargetAvailable</code> logic</td>
+</tr>
+<tr>
+<td>SPEC-008</td>
+<td>ELISA product details must use immunoassay view model product properties and ELISA-specific sections.</td>
+<td><code>appendProductDetailSection</code>, <code>appendElisaProductDetails</code></td>
+</tr>
+</table>
+<h3>9.5 Bioinformatics</h3>
+<table>
+<tr>
+<th>Requirement ID</th>
+<th>Requirement</th>
+<th>Source evidence</th>
+</tr>
+<tr>
+<td>BIO-001</td>
+<td>Bioinformatics must render only when the subtype has bioinformatics enabled and <code>isShowBio</code> has content.</td>
+<td><code>isBioInformaticDisplayed</code>, <code>isShowBio</code>, <code>appendBioinformaticsDetails</code></td>
+</tr>
+<tr>
+<td>BIO-002</td>
+<td>Antibody/protein bioinformatics may include protein aliases, gene aliases, UniProt, Entrez Gene ID, Functions, and Processes.</td>
+<td><code>appendBioinformaticsDetails</code></td>
+</tr>
+<tr>
+<td>BIO-003</td>
+<td>ELISA bioinformatics may include gene aliases, gene ID, gene symbol, protein aliases, and UniProt.</td>
+<td><code>appendBioinformaticsDetails</code></td>
+</tr>
+<tr>
+<td>BIO-004</td>
+<td>UniProt and Entrez entries must render as linked entries when URLs are available.</td>
+<td><code>extractLinkedBioinformaticsEntries</code></td>
+</tr>
+<tr>
+<td>BIO-005</td>
+<td>Panther function/process URLs must be generated with encoded values and plugin parameters when applicable.</td>
+<td><code>buildPantherBioinformaticsUrl</code></td>
+</tr>
+</table>
+<h3>9.6 Target information</h3>
+<table>
+<tr>
+<th>Requirement ID</th>
+<th>Requirement</th>
+<th>Source evidence</th>
+</tr>
+<tr>
+<td>TGT-001</td>
+<td>Target name and target URL must be generated consistently from subtype and target name.</td>
+<td><code>getTargetNameLink</code>, <code>resolveBreadcrumbPath</code></td>
+</tr>
+<tr>
+<td>TGT-002</td>
+<td>Primary and Secondary breadcrumb target URLs must use <code>/antibody/{subtype}/target/{target}</code>.</td>
+<td><code>resolveBreadcrumbPath</code></td>
+</tr>
+<tr>
+<td>TGT-003</td>
+<td>Proteins and Peptides target behavior must switch based on new TFP protein URL flag.</td>
+<td><code>resolveBreadcrumbPath</code></td>
+</tr>
+<tr>
+<td>TGT-004</td>
+<td>ELISA target behavior must switch based on ELISA TFP flag.</td>
+<td><code>resolveBreadcrumbPath</code></td>
+</tr>
+<tr>
+<td>TGT-005</td>
+<td>ELISA target section must include target name, target list, and product description when present.</td>
+<td><code>appendElisaTargetInfo</code></td>
+</tr>
+</table>
+<h3>9.7 References and scholarly articles</h3>
+<table>
+<tr>
+<th>Requirement ID</th>
+<th>Requirement</th>
+<th>Source evidence</th>
+</tr>
+<tr>
+<td>REF-001</td>
+<td>Reference count must prefer CiteAb count when citation display is enabled and CiteAb count is positive.</td>
+<td><code>resolveReferenceCount</code></td>
+</tr>
+<tr>
+<td>REF-002</td>
+<td>If CiteAb count is not available, use product detail reference count or view model reference count.</td>
+<td><code>resolveReferenceCount</code></td>
+</tr>
+<tr>
+<td>REF-003</td>
+<td>JSON-LD scholarly article data must render when available.</td>
+<td><code>PdpAeoMarkdownBuilderTest</code></td>
+</tr>
+<tr>
+<td>REF-004</td>
+<td>When JSON-LD is unavailable and citation display is enabled, CiteAb titles may be used as fallback.</td>
+<td><code>PdpAeoMarkdownBuilderTest</code></td>
+</tr>
+<tr>
+<td>REF-005</td>
+<td>Citation display is enabled by subtype, including Primary, Secondary, and Isotype Control.</td>
+<td><code>ProductSubType.java</code></td>
+</tr>
+</table>
+<h3>9.8 Questions and Answers</h3>
+<table>
+<tr>
+<th>Requirement ID</th>
+<th>Requirement</th>
+<th>Source evidence</th>
+</tr>
+<tr>
+<td>QNA-001</td>
+<td>Q and A must render only when <code>qnaModuleEnabled</code> is true.</td>
+<td><code>isQuestionsAndAnswersEnabled</code>, config</td>
+</tr>
+<tr>
+<td>QNA-002</td>
+<td>Q and A must render only for subtypes that enable Q and A.</td>
+<td><code>productSubType.isQnAEnabled</code></td>
+</tr>
+<tr>
+<td>QNA-003</td>
+<td>Q and A must respect enabled countries, configured as <code>CA,US</code>.</td>
+<td><code>isQuestionsAndAnswersEnabledCountries</code>, config</td>
+</tr>
+<tr>
+<td>QNA-004</td>
+<td>Q and A service API page and limit default to page <code>1</code> and limit <code>20</code>.</td>
+<td><code>qAndAServiceApiPage</code>, <code>qAndAServiceApiLimit</code></td>
+</tr>
+<tr>
+<td>QNA-005</td>
+<td>Q and A UI must use configured widget/API endpoints and support lazy loading threshold when configured.</td>
+<td><code>qnaWidgetAPI</code>, <code>aeoQnaApiBaseUrl</code>, <code>qnaLoaderThreshold</code></td>
+</tr>
+</table>
+<h3>9.9 Related products</h3>
+<table>
+<tr>
+<th>Requirement ID</th>
+<th>Requirement</th>
+<th>Source evidence</th>
+</tr>
+<tr>
+<td>RP-001</td>
+<td>Related products are globally enabled by <code>relatedProductsEnabled</code>.</td>
+<td>config</td>
+</tr>
+<tr>
+<td>RP-002</td>
+<td>Related products must also be enabled by subtype.</td>
+<td><code>isV2RelatedProductsEnabled</code>, <code>ProductSubType.java</code></td>
+</tr>
+<tr>
+<td>RP-003</td>
+<td>Primary, Secondary, Isotype Control, and Proteins and Peptides are enabled in <code>relatedProductsEnabledProductSubTypes</code>.</td>
+<td>config</td>
+</tr>
+<tr>
+<td>RP-004</td>
+<td>ELISA related products are controlled by ELISA-specific related products config.</td>
+<td><code>elisaRelatedProductsEnabled</code>, <code>elisaRelatedProductsModuleURL</code></td>
+</tr>
+<tr>
+<td>RP-005</td>
+<td>The related products module URL must append <code>v2/</code> when the V2 widget flag is enabled.</td>
+<td><code>getRelatedProductsModuleURL</code>, <code>relatedProductsWidgetV2</code></td>
+</tr>
+<tr>
+<td>RP-006</td>
+<td>Related product details should be fetched through configured related SKU and product detail service endpoints.</td>
+<td><code>relatedSkuListApiUrl</code>, <code>fetchRelatedProductDetailsUrl</code></td>
+</tr>
+</table>
+<h2>10. Subtype-Specific UI Requirements</h2>
+<h3>10.1 Primary Antibody</h3>
+<p>Primary Antibody pages must emphasize target, application, validation, species reactivity, citations, bioinformatics, images, and supporting documents.</p>
+<p>Important implementation references:</p>
+<ul>
+<li><code>ProductSubType.ANTIBODY_PRIMARY</code></li>
+<li><code>PrimaryAntibodyProductDetailViewModel</code></li>
+<li><code>AntibodyProductDetailViewModel.getShowProtocolsLink</code></li>
+<li><code>AntibodyProductDetailViewModel.getAdvancedVerificationLink</code></li>
+<li><code>PdpAeoMarkdownBuilder.appendHeroDetails</code></li>
+<li><code>PdpAeoMarkdownBuilder.appendBioinformaticsDetails</code></li>
+</ul>
+<p>Rules:</p>
+<ul>
+<li>Search supports typeahead, spellcheck, new filters, keep-my-filters, image search, antigen/epitope search, alternate search, and Solr re-query when enabled.</li>
+<li>PDP shows citation/reference counts and bioinformatics when configured and content exists.</li>
+<li>Protocols link is available only for primary antibody subtype when citation display and protocol flag allow it.</li>
+<li>Advanced Verification link appears only when available.</li>
+<li>Green badge appears only for configured countries.</li>
+<li>RRID must link to Antibody Registry when present.</li>
+</ul>
+<h3>10.2 Secondary Antibody</h3>
+<p>Secondary Antibody pages must emphasize host species, target species, cross adsorption, conjugate, application, references, and commerce package details.</p>
+<p>Important implementation references:</p>
+<ul>
+<li><code>ProductSubType.ANTIBODY_SECONDARY</code></li>
+<li><code>SecondaryAntibodyProductDetailViewModel</code></li>
+<li><code>AntibodyProductDetailViewModel.getAntibodyProductSpecificationsTableMap</code></li>
+<li><code>PdpAeoMarkdownBuilder.resolveReferenceCount</code></li>
+</ul>
+<p>Rules:</p>
+<ul>
+<li>Search supports spellcheck, filters, keep-my-filters, alternate search, and Solr re-query when enabled.</li>
+<li>Subtype has target availability set to true.</li>
+<li>CiteAb widget behavior is enabled at subtype level.</li>
+<li>Product specifications must include secondary-relevant fields when values exist, including host/isotype, target, cross adsorption, conjugate, and antibody form.</li>
+<li>References count may come from CiteAb when available and positive.</li>
+</ul>
+<h3>10.3 Isotype Controls</h3>
+<p>Isotype Control pages must help users match control products by species, host/isotype, conjugate, format, and application.</p>
+<p>Important implementation references:</p>
+<ul>
+<li><code>ProductSubType.ANTIBODY_CONTROL</code></li>
+<li><code>ControlAntibodyProductDetailViewModel</code></li>
+<li><code>AntibodyProductDetailViewModel.isShowBio</code></li>
+<li><code>PdpAeoMarkdownBuilder.appendProductSpecifications</code></li>
+</ul>
+<p>Rules:</p>
+<ul>
+<li>Search supports spellcheck, filters, keep-my-filters, alternate search, and Solr re-query when enabled.</li>
+<li>Subtype has citation display and bioinformatics display enabled.</li>
+<li>Related products are enabled through the configured subtype list.</li>
+<li>Commerce rules follow the common antibody pricing/availability/add-to-cart model.</li>
+</ul>
+<h3>10.4 Proteins and Peptides</h3>
+<p>Proteins and Peptides pages must support protein-specific search and PDP behavior while reusing antibody product type infrastructure.</p>
+<p>Important implementation references:</p>
+<ul>
+<li><code>ProductSubType.ANTIBODY_PROTEIN</code></li>
+<li><code>ProteinAntibodyProductDetailViewModel</code></li>
+<li><code>ProductSubType.getBaseUrl</code></li>
+<li><code>ProductSubType.getSearchURL</code></li>
+<li><code>AntibodyProductDetailViewModel.getProductHomePageUrl</code></li>
+</ul>
+<p>Rules:</p>
+<ul>
+<li>Search uses <code>/proteins/</code> routes when new protein URL flags are enabled.</li>
+<li>Product specifications label species as <code>Species</code>, not <code>Species Reactivity</code>.</li>
+<li>Host and isotype must be omitted for protein subtype.</li>
+<li>Bioinformatics is enabled when content is present.</li>
+<li>Data sheet link must be skipped for <code>antibody_protein</code> subtype in the AEO link URL section.</li>
+<li>Related products are enabled through the configured related products subtype list.</li>
+</ul>
+<h3>10.5 ELISA Kits</h3>
+<p>ELISA pages use the immunoassay product type and must render kit-specific details, target information, product description, and commerce behavior.</p>
+<p>Important implementation references:</p>
+<ul>
+<li><code>ProductSubType.ELISA</code></li>
+<li><code>ElisaProductDetailViewModel</code></li>
+<li><code>PdpAeoMarkdownBuilder.appendElisaProductDetails</code></li>
+<li><code>PdpAeoMarkdownBuilder.appendElisaAboutThisKit</code></li>
+<li><code>PdpAeoMarkdownBuilder.appendElisaTargetInfo</code></li>
+</ul>
+<p>Rules:</p>
+<ul>
+<li>Search supports typeahead, spellcheck, filters, keep-my-filters, alternate search, and Solr re-query when enabled.</li>
+<li>ELISA TFP target URLs switch based on <code>elisaTFPEnabled</code>.</li>
+<li>PDP Product Details use immunoassay properties.</li>
+<li>About This Kit renders description and rigorous validation when present.</li>
+<li>Target Information renders target name, target list, and product description when present.</li>
+<li>ELISA bioinformatics renders gene aliases, gene ID, gene symbol, protein aliases, and UniProt when <code>isShowBio</code> is true.</li>
+<li>ELISA related products use ELISA-specific related product module configuration.</li>
+</ul>
+<h2>11. API and Integration Requirements</h2>
+<table>
+<tr>
+<th>Area</th>
+<th>Config key or module</th>
+<th>Endpoint or behavior</th>
+</tr>
+<tr>
+<td>Search count</td>
+<td><code>productSearchCountAPI</code></td>
+<td><code>/api/magellan/product-service/getProductSearchCount?keyword=</code></td>
+</tr>
+<tr>
+<td>Catalog</td>
+<td><code>newCatalogAPI</code></td>
+<td>Catalog API base configured externally</td>
+</tr>
+<tr>
+<td>Pricing</td>
+<td><code>newPricingApi</code></td>
+<td><code>/api/magellan/pricing/</code></td>
+</tr>
+<tr>
+<td>Pricing products</td>
+<td><code>newPricingApiEnabledProducts</code></td>
+<td><code>ANTIBODY;IMMUNOASSAY</code></td>
+</tr>
+<tr>
+<td>Availability</td>
+<td><code>newAvailabilityAPI</code></td>
+<td><code>/api/store/sku/availability/</code></td>
+</tr>
+<tr>
+<td>Inventory data</td>
+<td><code>inventoryDataServiceUrl</code></td>
+<td>Inventory data service URL from config</td>
+</tr>
+<tr>
+<td>Related SKU list</td>
+<td><code>relatedSkuListApiUrl</code></td>
+<td><code>/api/magellan/related-products-service/v2/relatedProducts/antibody/sku</code></td>
+</tr>
+<tr>
+<td>Related product details</td>
+<td><code>fetchRelatedProductDetailsUrl</code></td>
+<td><code>/api/magellan/product-service/fetchRelatedProductDetails</code></td>
+</tr>
+<tr>
+<td>Related products UI</td>
+<td><code>relatedProductsModuleURL</code></td>
+<td><code>/api/magellan/related-products-ui/widget/</code></td>
+</tr>
+<tr>
+<td>ELISA related products UI</td>
+<td><code>elisaRelatedProductsModuleURL</code></td>
+<td><code>/api/magellan/related-products-ui/widget/v2/</code></td>
+</tr>
+<tr>
+<td>Q and A service</td>
+<td><code>qAndAServiceApiUrl</code></td>
+<td><code>/api/magellan/qanda-service/magellan/sku</code></td>
+</tr>
+<tr>
+<td>Q and A widget</td>
+<td><code>qnaWidgetAPI</code></td>
+<td><code>/api/magellan/qanda-ui/qna/widget/</code></td>
+</tr>
+<tr>
+<td>AEO Q and A</td>
+<td><code>aeoQnaApiBaseUrl</code></td>
+<td><code>/api/magellan/qanda-ui/qna</code></td>
+</tr>
+<tr>
+<td>Promotions availability</td>
+<td><code>promotionAvailabilityAPI</code></td>
+<td><code>/api/store/coupons/eligiblePromos</code></td>
+</tr>
+<tr>
+<td>Promotions suggestions</td>
+<td><code>promoSuggestionApiPath</code></td>
+<td><code>/api/store/promotions/engine/v1/suggestions</code></td>
+</tr>
+<tr>
+<td>Data sheet</td>
+<td><code>DATA_SHEET_PATH</code></td>
+<td><code>/order/genome-database/dataSheetPdf</code></td>
+</tr>
+<tr>
+<td>PubMed references</td>
+<td><code>PUBMED_URL_PREFIX</code></td>
+<td><code>http://www.ncbi.nlm.nih.gov/pubmed/</code></td>
+</tr>
+<tr>
+<td>RRID</td>
+<td><code>ANTIBODY_REGISTRY_URL_PREFIX</code></td>
+<td><code>https://www.antibodyregistry.org/</code></td>
+</tr>
+<tr>
+<td>Panther</td>
+<td><code>PANTHER_PATH_SEGMENT</code></td>
+<td><code>/panther/</code> path segment in generated URLs</td>
+</tr>
+</table>
+<h2>12. UI State and Error Handling</h2>
+<h3>12.1 Search states</h3>
+<ul>
+<li>Loading results</li>
+<li>Results found</li>
+<li>Results found with selected filters</li>
+<li>No exact match with filter preservation</li>
+<li>No results with alternate search links</li>
+<li>No results with no alternate links</li>
+<li>Spellcheck suggestion available</li>
+<li>Service error or timeout state</li>
+</ul>
+<h3>12.2 PDP states</h3>
+<ul>
+<li>Product active and orderable</li>
+<li>Product active but price unavailable</li>
+<li>Product active but availability pending</li>
+<li>Product long-term unavailable</li>
+<li>Product discontinued</li>
+<li>Product replaced or package-specific lifecycle state</li>
+<li>Anonymous user requiring sign-in for price/availability</li>
+<li>Dealer or country-specific inventory display</li>
+<li>Related products unavailable</li>
+<li>Q and A disabled by country/subtype/config</li>
+<li>Bioinformatics absent or disabled</li>
+<li>References unavailable</li>
+</ul>
+<h3>12.3 Developer notes</h3>
+<ul>
+<li>Empty values should be omitted from product details, specifications, bioinformatics, promotions, and ELISA sections.</li>
+<li>Client-side modules must not assume all services return data.</li>
+<li>Package selection must be treated as a primary PDP state driver.</li>
+<li>Feature flags and country/language context must be resolved before deciding whether to render optional modules.</li>
+</ul>
+<h2>13. Data and Analytics Requirements</h2>
+<p>The reviewed code exposes configuration and behavior but does not define a complete analytics event taxonomy. The following analytics requirements should be validated with the analytics owner before implementation.</p>
+<table>
+<tr>
+<th>Area</th>
+<th>Suggested event</th>
+<th>Required dimensions</th>
+</tr>
+<tr>
+<td>Search</td>
+<td>Search submitted</td>
+<td>keyword, subtype, country, language, result count, filters</td>
+</tr>
+<tr>
+<td>Search</td>
+<td>Filter applied</td>
+<td>subtype, filter group, filter value, result count</td>
+</tr>
+<tr>
+<td>Search</td>
+<td>Alternate search clicked</td>
+<td>source subtype, target subtype, keyword, alternate count</td>
+</tr>
+<tr>
+<td>Search</td>
+<td>Product card clicked</td>
+<td>subtype, product ID, SKU/webId, position, keyword</td>
+</tr>
+<tr>
+<td>PDP</td>
+<td>Package selected</td>
+<td>product ID, previous SKU, selected SKU, subtype</td>
+</tr>
+<tr>
+<td>PDP</td>
+<td>Price displayed</td>
+<td>product ID, SKU, currency, price availability, user login state</td>
+</tr>
+<tr>
+<td>PDP</td>
+<td>Availability displayed</td>
+<td>product ID, SKU, availability status, quantity, country</td>
+</tr>
+<tr>
+<td>PDP</td>
+<td>Add to Cart clicked</td>
+<td>product ID, SKU, quantity, orderability status</td>
+</tr>
+<tr>
+<td>PDP</td>
+<td>Related product clicked</td>
+<td>source product ID, related product ID, widget version</td>
+</tr>
+<tr>
+<td>PDP</td>
+<td>Q and A interaction</td>
+<td>product ID, action type, question ID where available</td>
+</tr>
+<tr>
+<td>PDP</td>
+<td>Reference clicked</td>
+<td>product ID, reference source, URL/domain</td>
+</tr>
+</table>
+<p>KPIs:</p>
+<ul>
+<li>Search success rate</li>
+<li>Search zero-result rate</li>
+<li>Filter usage rate</li>
+<li>Product card click-through rate</li>
+<li>PDP package selection rate</li>
+<li>Price availability rate</li>
+<li>Availability success rate</li>
+<li>Add-to-cart conversion rate</li>
+<li>Related product engagement</li>
+<li>Q and A engagement</li>
+<li>References and documentation engagement</li>
+</ul>
+<h2>14. Acceptance Criteria Summary</h2>
+<h3>14.1 Search</h3>
+<ul>
+<li>The five subtype search routes load the correct subtype and label.</li>
+<li>Configured result counts, spellcheck, typeahead, filters, and keep-my-filters behavior match subtype configuration.</li>
+<li>Result headers match blank keyword, wildcard keyword, normal keyword, and target/application contexts.</li>
+<li>Alternate search links display only when alternate subtype counts are available.</li>
+<li>Product cards and result counts do not show stale subtype data after navigation or filter changes.</li>
+</ul>
+<h3>14.2 PDP</h3>
+<ul>
+<li>PDP route resolves correct product, SKU/webId, subtype, breadcrumb, and canonical URL.</li>
+<li>Product title/banner area reflects product and selected package lifecycle state.</li>
+<li>Commerce card updates price, availability, quantity, and cart eligibility when package changes.</li>
+<li>Product specifications omit empty fields and apply subtype-specific labels and omissions.</li>
+<li>Bioinformatics renders only when enabled and content exists.</li>
+<li>Target information renders subtype-appropriate target content and URLs.</li>
+<li>References follow CiteAb/product detail/view model fallback order.</li>
+<li>Q and A appears only when subtype, country, and global flags allow it.</li>
+<li>Related products appear only when subtype and global flags allow them.</li>
+</ul>
+<h2>15. Similarities Across Product Subtypes</h2>
+<ul>
+<li>All five subtypes use subtype-driven route, label, feature, and search behavior.</li>
+<li>All five subtypes depend on product/package identity for PDP rendering.</li>
+<li>All five subtypes require defensive rendering of optional content.</li>
+<li>Commerce behavior is selected-package driven.</li>
+<li>Search experiences share keyword, filter, count, empty-state, and alternate-search patterns.</li>
+<li>PDP experiences share title/banner, package selection, commerce, specifications, related products, and support module patterns.</li>
+<li>Country, language, login, and feature flags influence UI rendering across the experience.</li>
+</ul>
+<h2>16. Differences Across Product Subtypes</h2>
+<table>
+<tr>
+<th>Area</th>
+<th>Primary</th>
+<th>Secondary</th>
+<th>Isotype</th>
+<th>Proteins and Peptides</th>
+<th>ELISA</th>
+</tr>
+<tr>
+<td>Product type</td>
+<td>antibody</td>
+<td>antibody</td>
+<td>antibody</td>
+<td>antibody</td>
+<td>immunoassay</td>
+</tr>
+<tr>
+<td>Search route</td>
+<td><code>/antibody/primary/</code></td>
+<td><code>/antibody/secondary/</code></td>
+<td><code>/antibody/control/</code></td>
+<td><code>/proteins/</code> when enabled</td>
+<td><code>/elisa/</code></td>
+</tr>
+<tr>
+<td>Typeahead</td>
+<td>Enabled</td>
+<td>Not in new typeahead list</td>
+<td>Not in new typeahead list</td>
+<td>Enabled</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>Spellcheck</td>
+<td>Enabled</td>
+<td>Enabled</td>
+<td>Enabled</td>
+<td>Not listed</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>Bioinformatics</td>
+<td>Enabled</td>
+<td>Not shown as enabled in subtype enum evidence</td>
+<td>Enabled</td>
+<td>Enabled</td>
+<td>Enabled through immunoassay view model</td>
+</tr>
+<tr>
+<td>References</td>
+<td>Citation display enabled</td>
+<td>Citation display enabled</td>
+<td>Citation display enabled</td>
+<td>Scholarly article JSON-LD enabled by config</td>
+<td>Protein schema JSON-LD enabled for ELISA</td>
+</tr>
+<tr>
+<td>Product specs</td>
+<td>Antibody-specific</td>
+<td>Secondary-specific with target availability</td>
+<td>Control-specific</td>
+<td>Protein-specific, omits host/isotype</td>
+<td>Immunoassay product details</td>
+</tr>
+<tr>
+<td>Related products</td>
+<td>Enabled</td>
+<td>Enabled</td>
+<td>Enabled</td>
+<td>Enabled</td>
+<td>ELISA-specific enabled path</td>
+</tr>
+<tr>
+<td>Protocols link</td>
+<td>Primary only</td>
+<td>Not primary-only eligible</td>
+<td>Not primary-only eligible</td>
+<td>Data sheet link skipped in AEO</td>
+<td>Not antibody protocol behavior</td>
+</tr>
+</table>
+<h2>17. Risks, Constraints, and Validation Items</h2>
+<table>
+<tr>
+<th>Item</th>
+<th>Risk or constraint</th>
+<th>Recommendation</th>
+</tr>
+<tr>
+<td>Repo access</td>
+<td>Exact de-magellan team repo list was not fully available from the environment.</td>
+<td>Confirm final repo ownership list with GitHub team admins.</td>
+</tr>
+<tr>
+<td>Service ownership</td>
+<td>PRD infers supporting services from config names and endpoints.</td>
+<td>Confirm service owner and SLA for pricing, availability, related products, Q and A, and product service.</td>
+</tr>
+<tr>
+<td>Availability config nuance</td>
+<td>Config contains both enabled-country and not-enabled-country values that may look contradictory without runtime context.</td>
+<td>Validate actual country gating logic before UI test signoff.</td>
+</tr>
+<tr>
+<td>Analytics</td>
+<td>Full event taxonomy was not present in reviewed evidence.</td>
+<td>Align proposed analytics with enterprise analytics owner.</td>
+</tr>
+<tr>
+<td>Banner rules</td>
+<td>Local business rules identify lifecycle banner behavior, but exact UI component names were not visible in reviewed source.</td>
+<td>Trace template/component implementation before development estimates.</td>
+</tr>
+<tr>
+<td>Secondary bioinformatics</td>
+<td>Subtype enum evidence did not show secondary bioinformatics enabled, while user requested bioinformatics coverage across pages.</td>
+<td>Validate current production behavior for secondary PDP before adding UI assumptions.</td>
+</tr>
+<tr>
+<td>Word TOC page numbers</td>
+<td>Generated Word files can include a manual TOC; dynamic Word page numbers may need field update in Microsoft Word.</td>
+<td>Use Word <code>Update Field</code> if a dynamic TOC is required.</td>
+</tr>
+</table>
+<h2>18. Operations and Support</h2>
+<h3>18.1 Monitoring needs</h3>
+<ul>
+<li>Search service success/failure rate by subtype.</li>
+<li>Product service response time and failure rate.</li>
+<li>Pricing API response time, timeout rate, and error-code distribution.</li>
+<li>Availability API response time and pending/no-data rate.</li>
+<li>Related products widget load success rate.</li>
+<li>Q and A widget load success rate.</li>
+<li>PDP package-switch errors.</li>
+<li>Client-side rendering errors by route/subtype.</li>
+</ul>
+<h3>18.2 Common support needs</h3>
+<ul>
+<li>Customer cannot see price.</li>
+<li>Customer sees pending or unavailable inventory.</li>
+<li>Add to Cart disabled or unavailable.</li>
+<li>Package-specific lifecycle message differs from expected.</li>
+<li>Product specifications missing or unexpected.</li>
+<li>References count differs from known citation count.</li>
+<li>Related products not visible.</li>
+<li>Q and A not visible due to country/subtype/config.</li>
+</ul>
+<h3>18.3 Incident triage signals</h3>
+<ul>
+<li>Confirm subtype and route.</li>
+<li>Confirm country, language, and login state.</li>
+<li>Confirm selected package SKU/webId.</li>
+<li>Confirm product lifecycle status.</li>
+<li>Check feature flags for pricing, availability, related products, Q and A, banner messages, and subtype-specific modules.</li>
+<li>Check upstream service status and response payloads.</li>
+<li>Compare PDP rendering with <code>PdpAeoMarkdownBuilder</code> output where applicable.</li>
+</ul>
+<h2>19. Developer Implementation Checklist</h2>
+<ul>
+<li>Map each route to <code>ProductSubType</code> and verify display label.</li>
+<li>Verify search count, spellcheck, typeahead, filter, image search, antigen search, alternate search, and keep-my-filters flags by subtype.</li>
+<li>Implement or validate package-selection state as the driver for SKU, price, availability, data sheet, banner, and cart behavior.</li>
+<li>Render empty optional sections defensively.</li>
+<li>Validate RRID, UniProt, Entrez, PubMed, Panther, data sheet, protocols, and technical support links.</li>
+<li>Confirm Q and A country/subtype/global gating.</li>
+<li>Confirm related products subtype/global gating and widget version path.</li>
+<li>Add automated tests for at least route resolution, selected package commerce updates, bioinformatics visibility, references fallback, Q and A gating, and related products gating.</li>
+</ul>
+<h2>20. Appendix: Example Pages</h2>
+<table>
+<tr>
+<th>Subtype</th>
+<th>Search example</th>
+<th>PDP example</th>
+</tr>
+<tr>
+<td>Primary Antibody</td>
+<td><code>https://www.thermofisher.com/antibody/primary/query/*</code></td>
+<td><code>https://www.thermofisher.com/antibody/product/Ki-67-Antibody-clone-SP6-Recombinant-Monoclonal/MA5-14520</code></td>
+</tr>
+<tr>
+<td>Secondary Antibody</td>
+<td><code>https://www.thermofisher.com/antibody/secondary/query/*</code></td>
+<td><code>https://www.thermofisher.com/antibody/product/Goat-anti-Rabbit-IgG-H-L-Cross-Adsorbed-Secondary-Antibody-Polyclonal/A-11008</code></td>
+</tr>
+<tr>
+<td>Isotype Control</td>
+<td><code>https://www.thermofisher.com/antibody/control/query/*</code></td>
+<td><code>https://www.thermofisher.com/antibody/product/Rabbit-IgG-Isotype-Control/02-6102</code></td>
+</tr>
+<tr>
+<td>Proteins and Peptides</td>
+<td><code>https://www.thermofisher.com/proteins/query/*</code></td>
+<td><code>https://www.thermofisher.com/proteins/product/Human-FGF-basic-FGF-2-bFGF-154-aa-Recombinant-Protein/100-18B-50UG</code></td>
+</tr>
+<tr>
+<td>ELISA Kits</td>
+<td><code>https://www.thermofisher.com/elisa/query/*</code></td>
+<td><code>https://www.thermofisher.com/elisa/product/Human-IL-18-ProQuantum-Immunoassay-Kit/A35613</code></td>
+</tr>
+</table>
+</body></html>

@@ -1,0 +1,267 @@
+Capability Solution Template Title
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-Summary"Summary
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-SolutionStakeholders"Solution Stakeholders
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-JiraTickets:"Jira Tickets: 
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-Scope"Scope
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-In-Scope"In-Scope
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-Out-of-Scope"Out-of-Scope
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-OtherScopeConsiderations"Other Scope Considerations
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-AssumptionsandConstraints"Assumptions and Constraints
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-Dependencies"Dependencies
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-OpenQuestions"Open Questions
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-AcceptanceCriteria-Feature1"Acceptance Criteria - Feature 1
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-Teams:TBD"Teams: TBD
+HYPERLINK ""<Section Header> (add as needed to group functionality within a feature)
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-AcceptanceCriteria-Feature2"Acceptance Criteria - Feature 2
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-Teams:TBD.1"Teams: TBD
+HYPERLINK ""<Section Header> (add as needed to group functionality within a feature)
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-User/SystemInteractions"User/System Interactions
+HYPERLINK "https://digitalplatforms-thermofisher.atlassian.net/wiki/display/ARCLD/01+-+Solution+Design+Template" \l "id-01-SolutionDesignTemplate-ArchitectureDiagrams"Architecture Diagrams
+Jira Align Portfolio Link- 
+https://thermofisher.jiraalign.com/EpicGrid?FirstTime=True&EpicID=2555
+Jira Align Capability Link -  
+https://thermofisher.jiraalign.com/CapabilitiesGrid?FirstTime=True&CapabilityID=3244                       
+Solution Analysis Definition of Ready Checklist
+EPIC and/or Capability lean business case well-defined​
+Problem Statement well-defined​ (Y- For  customers in targeted regional markets
+ the integration is a way  to provide a direct ordering experience That also consolidates local ERPS)
+Proposed solution: To provide seamless and comprehensive ordering solution in the region
+Customer/business requirements well defined​ (Y https://thermofisher.jiraalign.com/CapabilitiesGrid?FirstTime=True&CapabilityID=3244)
+Business process/operations alignment well defined and confirmed w/ stakeholders ​
+Conceptual user journey/UX/wireframes if required​ (N)
+CIS/Regulatory Requirements defined`(N)
+Success criteria/business outcomes well defined ​
+stated criteria/outcomes measurable ? (Y Korea Partner Portal - for the first phase of the partner portal, the expectation is to utilize existing features of Japan and India with minor enhancements )
+Solution investment level—modest or significant (e.g., Evaluating/prototype) vs. Investing/MVP)​ (N)
+Analytics needs identified​ (N)
+NFRs identified​ (N)
+Funding secured         
+Yes
+No                                           
+AR Support/LOE Required
+Yes
+No 
+
+Solution Stakeholders
+Epic Owner and/or Product Manager
+Karen Spinks
+Solution Partner and/or Strategic Initiative Partner
+
+IT Product Owner(s)
+Swathi, Abrita, Chethan, Kirthika, Alphonsa, Guru, Vikram, Susheela, Krupal, Pratik, Arunkumar
+Lead Information Architect 
+
+User Experience Designer
+
+Analytics Support
+
+Solution Leads (Architects, Solution Owners)
+Shreya Shetty
+CIS
+
+Privacy/Legal/Compliance
+
+SMEs/Advisors - CCG IT, Other
+
+SMEs/Advisors - Business Stakeholders
+
+
+Lean Business Case/ Problem Statement 
+Epic StatementFor  customers in targeted regional markets
+ the integration is a way  to provide a direct ordering experience That also consolidates local ERPS. To provide seamless and comprehensive ordering solution in the region
+Business Outcome HypothesisThe objective of this phase is to enable seamless partner access, product visibility, and basic transaction and opportunity management
+A dedicated landing page for dealers will be implemented using existing HYPERLINK "http://TF.com"http://TF.com templates. This page will display recent campaigns, updates, news, and partner-specific announcements, providing a centralized entry point for dealer-related content.
+A downloadable product list (SKU list) will be provided within the Dealer Portal. This list will include key commercial and regulatory information such as pricing, inventory availability, contract sizes, and compliance fields (e.g., Cartagena, PRTP, Fire Act). This enables partners to maintain accurate product catalogs and ensure regulatory adherence.
+The portal will support web order creation and visibility for products belonging to non-E1 divisions (SAP D50 / SAP PR1). Core capabilities include price and stock harmonization across systems and access to web order history. This ensures partners have a consistent and reliable ordering experience for Korea-specific product portfolios.
+The CRM module will enable dealers to capture, track, and update sales opportunities. Users will be able to link opportunities to leads, record progress updates, and monitor quotation activities—including pricing negotiations. This allows Thermo Fisher and its partners to maintain visibility into the sales pipeline and improve collaboration on revenue-generating activities.
+
+Leading indicators
+Users will be able to link opportunities to leads, record progress updates, and monitor quotation activities—including pricing negotiations. This allows Thermo Fisher and its partners to maintain visibility into the sales pipeline and improve collaboration on revenue-generating activities.
+
+Business Analysis Summary
+
+CAS Considerations
+
+Other
+
+Scope
+In-Scope
+Coordination between :
+Accounts: 
+Accounts Dashboard
+Hybris data
+Platform API
+Connex details from Mandalorians
+Catalog PDP
+Magellan PDP
+Cart
+Checkout
+Post purchase
+
+Out-of-Scope
+Phase 2 development work - Invite a colleague, Fast followers from UAT and Enhancements
+
+MVP Requirements
+Must have this:
+Accounts: Invite a Colleague by the Partner to be enabled. Dealer flag should be available for the invitee. 
+Accounts dashboard:  configurations to be enabled for the partners, Quote related submissions to be extended to KDP, Quote ID shall be passed to Checkout
+Identity: ENV specific login/registration for the new domain, Invite a Colleague functionality to be extended for Korea dealers
+Loyalty- Pass the dealer flag to the invited customer, Inviting existing customer with a new account link. Dealer data upload via bulk registration
+Platform Gateway- Disable/enable existing country wise cookies for KR specific, Enable new erpTypes (SAP PR1 3000, SAP_D50_KR20) linked to Korean accounts. Get the erpTypes to CSR portal. For the KR ISO CODE, the erpType to be picked up as SAP PR1 3000 and SAP_D50_KR20, get the sku entitlement list for KR
+Hybris- Product data and attributes to be loaded in Hybris and configured/entitled for the 2 new erpTypes, translations of the content on applicable places, Brands association for SKUs belonging to the new erps
+Platform API- Create a new entitlement sku list for the new erpTypes, Pass the Hybris data core attributes for the Search and PDP, get list price from EDP, add the new erptype to the Pricing, availability related kafka topic for regular updates on the new erpType
+PDP, Magellan - Display the entitled SKU PDP contents for login/guest user as per the new erpType setting for Korea dealers, display the different Pricing details configured for the new erpType, display WebOrderable, PVNO, WONV statuses for the skus based on erpTypes, get availability details for the entitle products for KR using PANDA API Integration for API for PR1
+Search- Update the Solr query and Search algorithms based on the new erpTypes. Consume the Core, Rich attributes, Videos, images from the Platform APIs and Hybris data for the new erpType. Update the pricing details, availability details on SRP based on the respective APIs from Platform API team, Partner based entitlement changes (Country + UserID) (existing feature) for KR, Display Stock message Stock availability count for E1
+Mandalorians- get the promotions that are eligible for the new erpType products, if available. Contact us info specific for the Korean region for the entitled SKUs
+Cart- Get the pricing, availability details as per the new erpTypes, get the overall price calculated as per the new erpTypes, display SKU notes, display sku availability based on the location, look into oversees inventory
+Checkout- Update SKU availability according to the new erpType, calculate the overall price as per the new erpType/location, For quotes, get the QuoteId and customer details from Accounts Dashboard and Post Purchase
+Post purchase- Enable the new SKUs for the order history tracking, Update the order status across the SAP db and ERP, store the quoteIds and details of orders etc in the Accounts Dashboards for the users  
+
+Additional Requirement Considered in Solution 
+Could have this
+ Analytics covering the new implementations for evaluations and user engagements
+Other Scope Considerations
+Wireframes Required at Solution Level?
+
+Legal or Regulatory Considerations
+
+Business Processes Impacted
+
+Analytics & Reporting Considerations
+
+Channel Considerations (B2B, SCMS, PSCMS)
+
+
+Solution Intent 
+Assumptions and Constraints
+01
+There are existing models for Dealer portal to “copy” the relevant ones and keep as reference for the new KDP 
+
+02Dealer portal for JP and IN should be existing to utilize existing features with minor enhancements
+
+Dependencies
+01
+
+
+02
+
+
+Solution Intent
+Functional Areas
+
+Data Flows
+
+Integrations
+
+UX/Wireframes
+
+Technical Approach or Enablers
+
+Content Alignment
+
+Identity Alignment
+
+Analytics Alignment
+
+Release Train Teams
+
+External Teams
+
+Translation Support
+
+Security or Privacy Assessment
+
+Channels (B2B or SCMS)
+
+Other
+
+Open Questions
+01
+
+
+02
+
+
+Solution Intent Details
+HYPERLINK "https://www.scaledagileframework.com/solution-intent/"Click here to learn more about solution intents
+Title
+IDDescriptionRecommended SolutionQuestionDecision
+
+    
+
+    
+
+    
+
+User/System Interactions (Use Case Scenarios/Wireframes)
+N/A
+Architecture Solution
+
+Feature Information
+Feature
+Benefit Hypothesis
+Jira Ticket Link
+ROM
+Estimated Start Date
+
+
+
+
+
+
+
+
+
+
+ART and Team Dependencies
+Development Team
+Dev Required
+Details
+Service/System
+Team Product Owner
+PDP
+1D X 3S
+
+
+
+Cart
+1D X1S
+
+
+
+Magellan
+1D X 3S
+
+
+
+IBS
+
+
+
+
+Business
+
+
+
+
+B2B or SCMS
+
+
+
+
+Solution Review Handoff
+Solution Review with Product Manager –  Review & sign off
+End to End Testing Sign Off - Including Analytics and CAS 
+Architecture- Review & sign off
+Analytics- Review & Sign off
+UX - Review and Sign Off
+Product Owner Review & sign off
+RTE informed of Solution Review Completion
+Engineering Manager informed of Solution Review Completion
+Update WSJF to move to Ready for Backlog
+
+Supplementary Information
+Please provide any additional information would be helpful.  
+Alternative Solution Explored
+Were any alternative solutions explored? Please document below.   
+Revision date 02.07.2024

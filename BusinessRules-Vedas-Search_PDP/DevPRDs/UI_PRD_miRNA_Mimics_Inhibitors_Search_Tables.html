@@ -1,0 +1,349 @@
+<!doctype html><html><head><meta charset="utf-8"><title>UI PRD miRNA Mimics and Inhibitors Search</title><style>
+body { font-family: Arial, Helvetica, sans-serif; font-size: 10.5pt; color: #222; line-height: 1.35; }
+h1 { color: #1f4e79; font-size: 22pt; border-bottom: 2px solid #1f4e79; padding-bottom: 6px; }
+h2 { color: #1f4e79; font-size: 15pt; margin-top: 20px; border-bottom: 1px solid #d9e2f3; padding-bottom: 3px; }
+h3 { color: #2f5597; font-size: 12.5pt; margin-top: 14px; }
+table { border-collapse: collapse; width: 100%; margin: 8px 0 14px 0; table-layout: fixed; }
+th { background: #1f4e79; color: white; font-weight: bold; border: 1px solid #9e9e9e; padding: 5px; vertical-align: top; }
+td { border: 1px solid #bfbfbf; padding: 5px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7f9fc; }
+code { font-family: Consolas, Menlo, monospace; font-size: 9.5pt; background: #f1f1f1; }
+p { margin: 6px 0 10px 0; }
+</style></head><body><h1>UI Developer PRD - miRNA Mimics and Inhibitors Search</h1>
+<table>
+<thead><tr><th>Field</th><th>Details</th></tr></thead>
+<tbody>
+<tr><td>Product / Tool</td><td>miRNA Mimics and Inhibitors Search</td></tr>
+<tr><td>Tool URL</td><td>https://www.thermofisher.com/order/rnai/miRNA/result?keyword=*</td></tr>
+<tr><td>Audience</td><td>UI developers, QA engineers, product owners, business analysts</td></tr>
+<tr><td>Document Type</td><td>UI rules document / developer PRD</td></tr>
+<tr><td>Source Date</td><td>2026-07-31</td></tr>
+<tr><td>Primary Verified Repo</td><td>thermofisher/magellan-search</td></tr>
+<tr><td>Related Repos Reviewed for Orientation</td><td>thermofisher/tfcom-magellan-product-service, thermofisher/tfcom-magellan-etools, thermofisher/magellan-core</td></tr>
+<tr><td>Repo Requiring Follow-up</td><td>thermofisher/magellan-data-scripts metadata fetch returned a transient connector error during this review</td></tr>
+</tbody></table>
+<h2>1. Document Purpose</h2>
+<table>
+<thead><tr><th>Item</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Purpose</td><td>Capture the UI-facing rules, component behavior, workflows, and validation observations for the miRNA Mimics and Inhibitors Search tool.</td></tr>
+<tr><td>Developer Focus</td><td>Identify source repositories, Angular modules, component names, service names, key functions, UI conditions, API calls, and add-to-cart behavior.</td></tr>
+<tr><td>Business Focus</td><td>Explain how search results expose assay details, related mimics/inhibitors, pricing, availability, related reagents, and supporting assay information.</td></tr>
+<tr><td>Scope</td><td>Search result UI behavior for miRNA assays and the Mimics/Inhibitors tab shown from the miRNA result card.</td></tr>
+<tr><td>Out of Scope</td><td>Backend implementation details beyond the APIs invoked by the UI; merchandising decisions not visible in the inspected UI source.</td></tr>
+</tbody></table>
+<h2>2. Source Evidence and Review Boundary</h2>
+<table>
+<thead><tr><th>Evidence Type</th><th>Repo</th><th>File / Module</th><th>What Was Verified</th></tr></thead>
+<tbody>
+<tr><td>UI search result component</td><td>thermofisher/magellan-search</td><td><code>src/main/javascript/modules/elcano/main/src/components/mirna-search-result/mirna-search-result.component.js</code></td><td>Main Angular component, bindings, tab logic, service calls, pricing rules, add-to-cart payload logic, popup text, analytics hooks.</td></tr>
+<tr><td>UI search result template</td><td>thermofisher/magellan-search</td><td><code>src/main/javascript/modules/elcano/main/src/components/mirna-search-result/mirna-search-result.template.html</code></td><td>Result card layout, tab labels, field visibility, details panel, commerce card, Bioz component, tab child components.</td></tr>
+<tr><td>Mimics/Inhibitors child component</td><td>thermofisher/magellan-search</td><td><code>src/main/javascript/modules/elcano/main/src/components/mirna-search-result/components/mirna-mimics-inhibitors-single-tube/mirna-mimics-inhibitors-single-tube.component.js</code></td><td>Child table row behavior, species limit, size dropdown, price calls, login refresh, add-to-cart trigger.</td></tr>
+<tr><td>Mimics/Inhibitors child template</td><td>thermofisher/magellan-search</td><td><code>src/main/javascript/modules/elcano/main/src/components/mirna-search-result/components/mirna-mimics-inhibitors-single-tube/mirna-mimics-inhibitors-single-tube.template.html</code></td><td>Child row columns, assay link, species show more/less, size selector, price labels, login prompt, add-to-cart button.</td></tr>
+<tr><td>Mimics/Inhibitors service</td><td>thermofisher/magellan-search</td><td><code>src/main/javascript/modules/elcano/main/src/services/mimicsInhibitorsService.js</code></td><td>API endpoint and request parameter used to fetch related mimic/inhibitor products.</td></tr>
+<tr><td>Related services</td><td>thermofisher/magellan-search</td><td><code>viewDetailsService.js</code>, <code>matureMirnaService.js</code>, <code>priMirnaService.js</code>, <code>relatedReagentsService.js</code>, <code>pricingService.js</code></td><td>API endpoints used by detail, mature miRNA, pri-miRNA, related reagent, and price workflows.</td></tr>
+<tr><td>Module registration</td><td>thermofisher/magellan-search</td><td><code>src/main/javascript/modules/elcano/main/src/index.js</code></td><td>Angular module registrations for UI components and services.</td></tr>
+<tr><td>Related repo orientation</td><td>thermofisher/tfcom-magellan-product-service</td><td>Repository metadata</td><td>Verified repo access and default branch, but no UI-specific source file was inspected for this PRD.</td></tr>
+<tr><td>Related repo orientation</td><td>thermofisher/tfcom-magellan-etools</td><td>Repository metadata</td><td>Verified repo access and default branch, but no UI-specific source file was inspected for this PRD.</td></tr>
+<tr><td>Related repo orientation</td><td>thermofisher/magellan-core</td><td>Repository metadata</td><td>Verified repo access and default branch, but no UI-specific source file was inspected for this PRD.</td></tr>
+<tr><td>Related repo orientation</td><td>thermofisher/magellan-data-scripts</td><td>Repository metadata</td><td>Metadata fetch failed during this review; validate data-script ownership separately.</td></tr>
+</tbody></table>
+<h2>3. Product Overview</h2>
+<table>
+<thead><tr><th>Area</th><th>Details</th></tr></thead>
+<tbody>
+<tr><td>Product Name</td><td>miRNA Mimics and Inhibitors Search</td></tr>
+<tr><td>Primary Purpose</td><td>Help users discover miRNA-related assays and related mimic/inhibitor products, compare product details, check size and price, and add eligible products to cart.</td></tr>
+<tr><td>User Entry Point</td><td><code>/order/rnai/miRNA/result?keyword=*</code></td></tr>
+<tr><td>Main UI Surface</td><td>Search result cards rendered by <code>appMirnaSearchResult</code>.</td></tr>
+<tr><td>Related UI Surface</td><td>Mimics/Inhibitors tab rendered through <code>appMirnaMimicsInhibitorsSingleTube</code>.</td></tr>
+<tr><td>Business Goal</td><td>Surface relevant miRNA assay results and related mimic/inhibitor product options while preserving commerce rules for price visibility, login, availability, and add to cart.</td></tr>
+<tr><td>Developer Goal</td><td>Maintain predictable tab visibility, service orchestration, SKU selection, pricing refresh, and cart payload behavior across miRNA assay subtypes.</td></tr>
+</tbody></table>
+<h2>4. Users and Stakeholders</h2>
+<table>
+<thead><tr><th>Persona / Stakeholder</th><th>Need</th><th>UI Implication</th></tr></thead>
+<tbody>
+<tr><td>Research scientist</td><td>Find miRNA assays and related mimic/inhibitor products quickly.</td><td>Result card must expose product ID, assay name, species, miRBase details, related tabs, and supporting details without requiring multiple searches.</td></tr>
+<tr><td>Procurement / buyer</td><td>Check orderability, availability, size, list price, user price, and add-to-cart eligibility.</td><td>Commerce panel must show availability, size selector, price labels, login prompt, and Add to cart only when rules allow.</td></tr>
+<tr><td>Product owner</td><td>Ensure the search experience supports miRNA assay discovery and related product cross-sell.</td><td>Tab visibility and related product sections must map to backend flags such as <code>hasMI</code>, <code>hasMature</code>, and <code>hasPri</code>.</td></tr>
+<tr><td>UI developer</td><td>Understand module boundaries and function-level behavior.</td><td>PRD identifies Angular component, template, services, key functions, endpoints, and validation gaps.</td></tr>
+<tr><td>QA engineer</td><td>Build test cases for result display, tabs, pricing, login, add-to-cart, and related products.</td><td>Acceptance criteria and validation matrix provide testable conditions.</td></tr>
+<tr><td>Analytics stakeholder</td><td>Track result interactions and commerce actions.</td><td>UI must preserve Omniture calls for tab opening, PDP link clicks, map usage, size change, and add-to-cart.</td></tr>
+</tbody></table>
+<h2>5. Repository and Module Map</h2>
+<table>
+<thead><tr><th>Repo</th><th>Role in This PRD</th><th>Confirmed Files / Modules</th><th>UI Relevance</th></tr></thead>
+<tbody>
+<tr><td>thermofisher/magellan-search</td><td>Primary UI implementation repo</td><td><code>advanced-taqman-search</code> Angular module; <code>mirna-search-result</code> component; miRNA child components; UI services</td><td>Owns the inspected search result UI behavior for the tool.</td></tr>
+<tr><td>thermofisher/tfcom-magellan-product-service</td><td>Related service repo</td><td>Repo metadata verified only</td><td>Potential product/pricing/catalog dependency; no UI module verified in this pass.</td></tr>
+<tr><td>thermofisher/tfcom-magellan-etools</td><td>Related eTools repo</td><td>Repo metadata verified only</td><td>Potential shared tool/service dependency; no UI module verified in this pass.</td></tr>
+<tr><td>thermofisher/magellan-data-scripts</td><td>Related data scripts repo</td><td>Metadata fetch failed</td><td>Potential data ingestion or transformation dependency; validate separately.</td></tr>
+<tr><td>thermofisher/magellan-core</td><td>Related shared/core repo</td><td>Repo metadata verified only</td><td>Potential shared constants/models dependency; no UI module verified in this pass.</td></tr>
+</tbody></table>
+<h2>6. Confirmed UI Components and Services</h2>
+<table>
+<thead><tr><th>Component / Service</th><th>Type</th><th>File</th><th>Main Responsibility</th></tr></thead>
+<tbody>
+<tr><td><code>appMirnaSearchResult</code></td><td>Angular component</td><td><code>mirna-search-result.component.js</code></td><td>Render each miRNA result, manage tabs, price refresh, commerce state, related products, and analytics events.</td></tr>
+<tr><td><code>mirna-search-result.template.html</code></td><td>Angular template</td><td><code>mirna-search-result.template.html</code></td><td>Render result card, product links, product type, details tabs, commerce panel, Add to cart, Bioz block.</td></tr>
+<tr><td><code>appMirnaMimicsInhibitorsSingleTube</code></td><td>Angular child component</td><td><code>mirna-mimics-inhibitors-single-tube.component.js</code></td><td>Render each mimic/inhibitor related product row, handle species expansion, SKU selection, price refresh, and Add to cart trigger.</td></tr>
+<tr><td><code>mirna-mimics-inhibitors-single-tube.template.html</code></td><td>Angular child template</td><td><code>mirna-mimics-inhibitors-single-tube.template.html</code></td><td>Render columns for Mimic/Inhibitor, Assay ID, Species, Size, Price, Your Price, login prompt, and Add to cart.</td></tr>
+<tr><td><code>mimicsInhibitorsService</code></td><td>Angular factory</td><td><code>mimicsInhibitorsService.js</code></td><td>Fetch mimic/inhibitor products from <code>/order/genome-database/mirnaAssayDropDowns</code> using <code>mirnainhib</code>.</td></tr>
+<tr><td><code>viewDetailsService</code></td><td>Angular factory</td><td><code>viewDetailsService.js</code></td><td>Fetch assay details from <code>/order/genome-database/viewAssayDetails</code> and array details from <code>/order/genome-database/viewArrayDetails</code>.</td></tr>
+<tr><td><code>matureMirnaService</code></td><td>Angular factory</td><td><code>matureMirnaService.js</code></td><td>Fetch mature miRNA assays from <code>/order/genome-database/mirnaAssayDropDowns</code> using <code>mirnamature</code>.</td></tr>
+<tr><td><code>priMirnaService</code></td><td>Angular factory</td><td><code>priMirnaService.js</code></td><td>Fetch pri-miRNA assays from <code>/order/genome-database/mirnaAssayDropDowns</code> using <code>mirnaprimary</code>.</td></tr>
+<tr><td><code>relatedReagentsService</code></td><td>Angular factory</td><td><code>relatedReagentsService.js</code></td><td>Fetch related reagents from <code>/order/genome-database/relatedReagents</code>.</td></tr>
+<tr><td><code>pricingService</code></td><td>Angular factory</td><td><code>pricingService.js</code></td><td>Fetch list or user price from <code>/order/genome-database/price</code>.</td></tr>
+<tr><td><code>alignMapModuleManager</code></td><td>Angular service dependency</td><td>Injected into <code>appMirnaSearchResult</code></td><td>Lazy-load alignment map module for eligible assay subtypes.</td></tr>
+<tr><td><code>gsdOmnitureService</code></td><td>Angular service dependency</td><td>Injected into <code>appMirnaSearchResult</code></td><td>Track result abandonment, size changes, tab opens, PDP clicks, map usage, and Add to cart.</td></tr>
+<tr><td><code>sharedTaqManService</code></td><td>Angular service dependency</td><td>Injected into main and child components</td><td>Share product type, login status, format, availability text, currency display, and trusted HTML helpers.</td></tr>
+</tbody></table>
+<h2>7. Functional Architecture</h2>
+<table>
+<thead><tr><th>Level</th><th>Layer</th><th>Responsibility</th><th>Source Evidence</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Browser route</td><td>User lands on miRNA search result URL with keyword query.</td><td>Tool URL supplied by user.</td></tr>
+<tr><td>1</td><td>Search result page shell</td><td>Loads the advanced TaqMan / Elcano Angular module.</td><td><code>advanced-taqman-search</code> registration in <code>index.js</code>.</td></tr>
+<tr><td>1</td><td>Result card component</td><td>Renders each miRNA result card and its tabbed sections.</td><td><code>appMirnaSearchResult</code>.</td></tr>
+<tr><td>2</td><td>Main result template</td><td>Shows product ID, catalog number, assay name, species, mirBase data, product type, and commerce panel.</td><td><code>mirna-search-result.template.html</code>.</td></tr>
+<tr><td>2</td><td>Tab controller</td><td>Opens Details, Mimics/Inhibitors, Mature miRNA Assays, Pri-miRNA Assays, Reagents, Assay map, and Arrays based on data flags.</td><td><code>setTab</code>, <code>isSet</code>, <code>showAlignmentMap</code>, <code>isRelatedArraysExist</code>.</td></tr>
+<tr><td>2</td><td>Child tab components</td><td>Render related product rows and handle per-row SKU/pricing/cart interactions.</td><td><code>appMirnaMimicsInhibitorsSingleTube</code>, <code>appMatureMirnaAssays</code>, <code>appMirnaPriMirnaSingleTube</code>, <code>appProductRelatedReagentsSingleTube</code>.</td></tr>
+<tr><td>3</td><td>UI services</td><td>Fetch tab-specific details and pricing from backend endpoints.</td><td><code>mimicsInhibitorsService</code>, <code>viewDetailsService</code>, <code>matureMirnaService</code>, <code>priMirnaService</code>, <code>relatedReagentsService</code>, <code>pricingService</code>.</td></tr>
+<tr><td>3</td><td>Commerce integration</td><td>Convert selected product/SKU into cart item payload and invoke cart API.</td><td><code>fnAddItemToCart</code>, <code>formItemfromProduct</code>, <code>formItemfromPriMirnaAssays</code>, <code>formItemfromRelatedRegent</code>.</td></tr>
+<tr><td>3</td><td>Analytics integration</td><td>Track user interactions against the search result and tab modules.</td><td><code>gsdOmnitureService</code> calls in <code>login</code>, <code>setDefaultSku</code>, <code>setTab</code>, <code>fnPDPOmniClick</code>, <code>fnMapThis</code>, <code>fnAddItemToCart</code>.</td></tr>
+</tbody></table>
+<h2>8. Workflow Diagram - Search Result Rendering</h2>
+<table>
+<thead><tr><th>Step</th><th>Actor / Module</th><th>Action</th><th>Next Step</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>User</td><td>Opens <code>/order/rnai/miRNA/result?keyword=*</code>.</td><td>Search page loads result data.</td></tr>
+<tr><td>2</td><td>Search page</td><td>Renders a result item through <code>appMirnaSearchResult</code>.</td><td>Component initializes.</td></tr>
+<tr><td>3</td><td><code>appMirnaSearchResult.fnInit</code></td><td>Initializes state, listens to select-all events, watches quantity, login, and size models.</td><td>Price is initialized from default SKU.</td></tr>
+<tr><td>4</td><td><code>setPrice</code></td><td>Calls <code>pricingService.async(sharedTaqManService.productType, packageId, sku, loginStatus)</code>.</td><td>Price fields and commerce flags are updated.</td></tr>
+<tr><td>5</td><td>Template</td><td>Displays product ID, catalog number, product type, assay name, species, mirBase details, tab links, and commerce panel.</td><td>User can open tabs, select products, check price, or add to cart.</td></tr>
+<tr><td>6</td><td><code>getIsAddToCart</code></td><td>Determines whether Add to cart is allowed.</td><td>Add to cart button is displayed only when eligibility rules pass.</td></tr>
+</tbody></table>
+<h2>9. Workflow Diagram - Mimics/Inhibitors Tab</h2>
+<table>
+<thead><tr><th>Step</th><th>Actor / Module</th><th>Action</th><th>Data / Endpoint</th><th>UI Result</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>User</td><td>Clicks Mimics/Inhibitors tab.</td><td><code>setTab(&#x27;mimics-inhibitors&#x27;, index)</code></td><td>Existing tab closes if already active; otherwise workflow continues.</td></tr>
+<tr><td>2</td><td>Main component</td><td>Records analytics for Mimics/Inhibitors module open.</td><td><code>gsdOmnitureService.relatedProductsModuleOpened(...)</code></td><td>Analytics event is fired.</td></tr>
+<tr><td>3</td><td>Main component</td><td>Requests related mimic/inhibitor products.</td><td><code>mimicsInhibitorsService.fnGetData(assayId, assayType)</code></td><td>HTTP call begins.</td></tr>
+<tr><td>4</td><td>Service</td><td>Calls backend.</td><td>GET <code>/order/genome-database/mirnaAssayDropDowns?mirnainhib={assayId}</code></td><td>Response expected to include <code>mirnaProducts</code>.</td></tr>
+<tr><td>5</td><td>Main component</td><td>Maps package IDs to package objects.</td><td><code>product.data.packageObjs[packageId]</code></td><td>Child rows receive product and SKU package metadata.</td></tr>
+<tr><td>6</td><td>Template</td><td>Repeats child component.</td><td><code>ng-repeat=&quot;objMimicsInhibitors in arrMimicsInhibitorsBase&quot;</code></td><td>Mimic/inhibitor table rows appear.</td></tr>
+<tr><td>7</td><td>Child component</td><td>Initializes size dropdown and selected SKU.</td><td><code>fnGetSize(packageId)</code></td><td>First SKU detail becomes default selected option.</td></tr>
+<tr><td>8</td><td>Child component</td><td>Refreshes price when selected option or login changes.</td><td><code>setPrice(skuNumber.value)</code> -&gt; <code>/order/genome-database/price</code></td><td>Price / Your Price display updates.</td></tr>
+<tr><td>9</td><td>User</td><td>Clicks Add to cart when allowed.</td><td><code>onAddToCart</code> -&gt; main <code>fnAddItemToCart(obj, &#x27;mimic module&#x27;)</code></td><td>Cart item is created from selected related product SKU.</td></tr>
+</tbody></table>
+<h2>10. Workflow Diagram - Commerce and Price</h2>
+<table>
+<thead><tr><th>Step</th><th>Main Result Commerce</th><th>Mimic/Inhibitor Child Commerce</th></tr></thead>
+<tbody>
+<tr><td>Size source</td><td><code>product.data.packageObject.skuList[0].skuDetails</code></td><td><code>packageObjects[packageId].skuList[0].skuDetails</code></td></tr>
+<tr><td>Default SKU rule</td><td><code>getDefaultSku</code> matches selected <code>scaleModel</code> to SKU <code>scaleSize</code>; slash in scale size may be normalized to hyphen for comparison.</td><td><code>fnGetSize</code> selects the first SKU detail as default child row option.</td></tr>
+<tr><td>Price endpoint</td><td><code>/order/genome-database/price</code> with <code>productType</code>, <code>package_id</code>, <code>thisSku</code>, <code>priceType</code>.</td><td><code>/order/genome-database/price</code> with blank product type/package ID and selected SKU.</td></tr>
+<tr><td>Login behavior</td><td><code>priceType</code> is <code>your</code> when logged in, otherwise <code>list</code>.</td><td>Login watcher refreshes selected SKU price after login status changes.</td></tr>
+<tr><td>Add-to-cart eligibility</td><td>Requires default SKU, pricing action not matching <code>Contact</code>, <code>Price View</code>, or <code>ERR</code>, and package ID not containing <code>Stealth3</code>.</td><td>Requires selected option pricing action not matching <code>Contact</code>, <code>Price View</code>, or <code>ERR</code>; template also hides price/actions when package ID contains <code>Stealth3</code>.</td></tr>
+<tr><td>Cart payload</td><td><code>formItemfromProduct</code> builds SKU, assay ID, name, price, quantity, symbol, UOM, category, and product name.</td><td><code>formItemfromPriMirnaAssays</code> builds payload using <code>selectedSku</code> fields for mimic, inhibitor, mature, and pri-miRNA related rows.</td></tr>
+<tr><td>Analytics</td><td>Add-to-cart and size-change events are recorded through <code>gsdOmnitureService</code>.</td><td>Child delegates add-to-cart to main component, which records analytics.</td></tr>
+</tbody></table>
+<h2>11. Workflow Diagram - Supporting Tabs</h2>
+<table>
+<thead><tr><th>Tab</th><th>Display Rule</th><th>Service / Function</th><th>Endpoint / Destination</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>Details</td><td>Always available as a tab link.</td><td><code>viewDetailsService.fnGetData(assayId, assayType)</code></td><td>GET <code>/order/genome-database/viewAssayDetails</code></td><td>Displays species, miRBase, mature sequence, amplicon length, chromosome location, aliases, primer pools, cards, stem-loop details, and View Full Details links based on subtype.</td></tr>
+<tr><td>Mimics/Inhibitors</td><td>Visible when <code>product.data.hasMI</code> is true.</td><td><code>mimicsInhibitorsService.fnGetData(assayId, assayType)</code></td><td>GET <code>/order/genome-database/mirnaAssayDropDowns?mirnainhib={assayId}</code></td><td>Displays related mimic/inhibitor rows.</td></tr>
+<tr><td>Mature miRNA Assays</td><td>Visible when product subtype is not <code>advanced</code> or <code>taqman</code> and <code>hasMature</code> is true.</td><td><code>matureMirnaService.fnGetData(assayId, assayType)</code></td><td>GET <code>/order/genome-database/mirnaAssayDropDowns?mirnamature={assayId}</code></td><td>Displays mature miRNA related assay rows.</td></tr>
+<tr><td>Pri-miRNA Assays</td><td>Visible when <code>product.data.hasPri</code> is true.</td><td><code>priMirnaService.fnGetData(assayId)</code></td><td>GET <code>/order/genome-database/mirnaAssayDropDowns?mirnaprimary={assayId}</code></td><td>Displays pri-miRNA related assay rows.</td></tr>
+<tr><td>Reagents</td><td>Always available as a tab link.</td><td><code>relatedReagentsService.fnGetData(productType, productSubType)</code></td><td>GET <code>/order/genome-database/relatedReagents</code></td><td>Displays related reagent rows with platform/size and commerce controls.</td></tr>
+<tr><td>Assay map</td><td>Visible when product is not a control assay and subtype is <code>primiRNA</code>, <code>taqman</code>, or <code>advanced</code>.</td><td><code>alignMapModuleManager</code> and <code>fnMapThis</code></td><td>Lazy-loaded alignment map module</td><td>Displays alignment map and records map analytics.</td></tr>
+<tr><td>Arrays</td><td>Visible when <code>arrayCount &gt; 0</code>.</td><td><code>isRelatedArraysClicked</code></td><td><code>/order/genome-database/?pearUXVerSuffix=pearUX2&amp;elcanoForm=true#!/microrna/arrays/microrna_all/?keyword={productID}&amp;searchMethod=keyword</code></td><td>Opens related array results.</td></tr>
+</tbody></table>
+<h2>12. UI Business Rules</h2>
+<table>
+<thead><tr><th>Rule ID</th><th>Area</th><th>Rule</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>UI-MIR-001</td><td>Result card</td><td>Each miRNA result is rendered by <code>appMirnaSearchResult</code> using the product binding supplied by the search page.</td><td><code>mirna-search-result.component.js</code></td></tr>
+<tr><td>UI-MIR-002</td><td>Selection</td><td>The result checkbox is bound to <code>bolSelected</code>; changing it invokes <code>fnSelectProduct($event)</code> and delegates the selected state to <code>onSelectChange</code>.</td><td><code>mirna-search-result.template.html</code>, <code>fnSelectProduct</code></td></tr>
+<tr><td>UI-MIR-003</td><td>Best coverage</td><td>The UI marks a result as Best coverage when <code>product.data.recommended</code> is <code>Yes</code>.</td><td><code>fnGetBoolean</code>, template</td></tr>
+<tr><td>UI-MIR-004</td><td>Most citations</td><td>The UI marks a result as Most citations when <code>product.data.citations</code> equals <code>maxCitationsNumber</code>.</td><td><code>fnFindMaxRow</code>, template</td></tr>
+<tr><td>UI-MIR-005</td><td>Product ID link</td><td>The Product ID opens <code>/order/genome-database/details/microrna/{productID}?CID=&amp;ICID=&amp;subtype=</code> in a new tab and records PDP click analytics.</td><td>Template, <code>fnPDPOmniClick</code></td></tr>
+<tr><td>UI-MIR-006</td><td>Catalog link</td><td>Catalog number links open <code>/order/catalog/product/{defaultSkus}</code> in a new tab.</td><td>Template</td></tr>
+<tr><td>UI-MIR-007</td><td>Product type display</td><td>Product subtype <code>advanced</code> or <code>Advanced Control miRNA Assay</code> displays Product type as Advanced miRNA Assay.</td><td>Template</td></tr>
+<tr><td>UI-MIR-008</td><td>Product type display</td><td>Product subtype <code>taqman</code> or <code>Control miRNA Assay</code> displays Product type as miRNA Assay.</td><td>Template</td></tr>
+<tr><td>UI-MIR-009</td><td>miRNA help popup</td><td>The product type question icon opens a popup explaining Advanced miRNA Assays, miRNA Assays, and Primary miRNA Assays.</td><td><code>fnOpenMirnaPopup</code></td></tr>
+<tr><td>UI-MIR-010</td><td>Mimics/Inhibitors help popup</td><td>The Mimics/Inhibitors tab question icon opens explanatory text for miRNA mimics and inhibitors.</td><td><code>fnOpenPopup</code></td></tr>
+<tr><td>UI-MIR-011</td><td>Assay design</td><td>For advanced target type, the UI displays assay design and prefixes <code>Advanced,</code> when <code>fnDisplayAdvanced(assayDesign)</code> returns true.</td><td>Template, <code>fnDisplayAdvanced</code></td></tr>
+<tr><td>UI-MIR-012</td><td>Species display</td><td>Non-advanced results show species with collapse/expand behavior when the species value is long.</td><td>Template</td></tr>
+<tr><td>UI-MIR-013</td><td>mirBase display</td><td>Non-advanced results show miRBase Names with collapse/expand behavior when the value is long.</td><td>Template</td></tr>
+<tr><td>UI-MIR-014</td><td>Details tab</td><td>Details tab is always shown and fetches assay details on first open.</td><td>Template, <code>setTab</code>, <code>viewDetailsService</code></td></tr>
+<tr><td>UI-MIR-015</td><td>Mimics/Inhibitors tab</td><td>Mimics/Inhibitors tab is shown only when <code>product.data.hasMI</code> is true.</td><td>Template</td></tr>
+<tr><td>UI-MIR-016</td><td>Mature miRNA tab</td><td>Mature miRNA Assays tab is shown only when product subtype is not <code>advanced</code> or <code>taqman</code> and <code>product.data.hasMature</code> is true.</td><td>Template</td></tr>
+<tr><td>UI-MIR-017</td><td>Pri-miRNA tab</td><td>Pri-miRNA Assays tab is shown only when <code>product.data.hasPri</code> is true.</td><td>Template</td></tr>
+<tr><td>UI-MIR-018</td><td>Reagents tab</td><td>Reagents tab is always shown and calls <code>relatedReagentsService</code> when opened.</td><td>Template, <code>setTab</code></td></tr>
+<tr><td>UI-MIR-019</td><td>Assay map tab</td><td>Assay map is available only for non-control products with subtype <code>primiRNA</code>, <code>taqman</code>, or <code>advanced</code>.</td><td>Template</td></tr>
+<tr><td>UI-MIR-020</td><td>Arrays tab</td><td>Arrays link is available only when <code>arrayCount &gt; 0</code>.</td><td><code>isRelatedArraysExist</code>, template</td></tr>
+<tr><td>UI-MIR-021</td><td>Tab toggle</td><td>Clicking the active tab again closes the tab by setting the current tab to null.</td><td><code>setTab</code></td></tr>
+<tr><td>UI-MIR-022</td><td>Tab data retrieval</td><td>Each tab fetches its data only when the corresponding tab is opened.</td><td><code>setTab</code></td></tr>
+<tr><td>UI-MIR-023</td><td>Mimics/Inhibitors endpoint</td><td>Mimic/inhibitor related products are fetched from <code>/order/genome-database/mirnaAssayDropDowns</code> with parameter <code>mirnainhib={assayId}</code>.</td><td><code>mimicsInhibitorsService.fnGetData</code></td></tr>
+<tr><td>UI-MIR-024</td><td>Mimics/Inhibitors result binding</td><td>The response field <code>mirnaProducts</code> is expected and is assigned to <code>arrMimicsInhibitorsBase</code>.</td><td><code>mimicsInhibitorsService</code>, <code>setTab</code></td></tr>
+<tr><td>UI-MIR-025</td><td>Package mapping</td><td>Mimics/Inhibitors rows use <code>packageId</code> to map related product rows to <code>product.data.packageObjs</code>.</td><td><code>setTab</code></td></tr>
+<tr><td>UI-MIR-026</td><td>Mimics/Inhibitors columns</td><td>The Mimics/Inhibitors table displays Mimic/Inhibitor type, Assay ID, Species, Size, and commerce actions.</td><td><code>mirna-search-result.template.html</code>, child template</td></tr>
+<tr><td>UI-MIR-027</td><td>Child assay link</td><td>Child assay ID links to <code>/order/genome-database/details/mirna/{assayId}?CID=&amp;ICID=&amp;subtype=</code>.</td><td>Child template</td></tr>
+<tr><td>UI-MIR-028</td><td>Child species limit</td><td>Mimics/Inhibitors child rows show the first three species by default and provide show more/show less when species count exceeds three.</td><td><code>speciesLimit</code>, <code>fnToggleSpeciesLimit</code>, child template</td></tr>
+<tr><td>UI-MIR-029</td><td>Child size source</td><td>Child size selector is built from <code>packageObjects[packageId].skuList[0].skuDetails</code>.</td><td><code>fnGetSize</code></td></tr>
+<tr><td>UI-MIR-030</td><td>Child default size</td><td>The first SKU detail in the child size list is selected by default.</td><td><code>fnGetSize</code></td></tr>
+<tr><td>UI-MIR-031</td><td>Child price refresh</td><td>Child component refreshes price when selected option changes or login status changes.</td><td><code>$scope.$watch</code>, <code>fnTrackSelectedOption</code>, <code>fnUpdateLogin</code>, <code>setPrice</code></td></tr>
+<tr><td>UI-MIR-032</td><td>Main price refresh</td><td>Main card refreshes price at init and when selected SKU changes.</td><td><code>fnInit</code>, <code>setDefaultSku</code>, <code>setPrice</code></td></tr>
+<tr><td>UI-MIR-033</td><td>Price API</td><td>Price retrieval uses <code>/order/genome-database/price</code> with <code>priceType</code> set to <code>your</code> when logged in and <code>list</code> otherwise.</td><td><code>pricingService.async</code></td></tr>
+<tr><td>UI-MIR-034</td><td>Main add-to-cart rule</td><td>Main card Add to cart is allowed only when default SKU exists, pricing action is not Contact / Price View / ERR, and package ID does not contain <code>Stealth3</code>.</td><td><code>getIsAddToCart</code></td></tr>
+<tr><td>UI-MIR-035</td><td>Child add-to-cart rule</td><td>Child row Add to cart is allowed only when selected option pricing action is not Contact / Price View / ERR; the template also suppresses commerce actions for <code>Stealth3</code> package IDs.</td><td>Child <code>getIsAddToCart</code>, child template</td></tr>
+<tr><td>UI-MIR-036</td><td>Not orderable display</td><td>If the main product has no default SKU, the commerce card displays Not Orderable Online.</td><td>Template</td></tr>
+<tr><td>UI-MIR-037</td><td>Availability display</td><td>Main card availability is rendered from <code>sharedTaqManService.getAvailability(defaultSku.inventoryFlag)</code>.</td><td>Template</td></tr>
+<tr><td>UI-MIR-038</td><td>User price display</td><td>Your Price is shown only for logged-in users when the item is add-to-cart eligible.</td><td>Template</td></tr>
+<tr><td>UI-MIR-039</td><td>Check your price</td><td>Check your price is shown for unauthenticated users when the item is add-to-cart eligible and triggers login.</td><td>Template, <code>login</code></td></tr>
+<tr><td>UI-MIR-040</td><td>Web-only price</td><td>Web-only price is shown only when <code>priceData.onlinePriceApplicable</code>, <code>priceData.showWebOnlyPrice</code>, and add-to-cart eligibility are true.</td><td><code>fnSetPricingData</code></td></tr>
+<tr><td>UI-MIR-041</td><td>Size change analytics</td><td>Changing size on the main card records size-change analytics when the selected SKU scale size changes.</td><td><code>setDefaultSku</code></td></tr>
+<tr><td>UI-MIR-042</td><td>Main cart payload</td><td>Main card cart item includes SKU, assay ID, name, price, quantity 1, gene symbol, validated flag, UOM, category name, and product name.</td><td><code>formItemfromProduct</code></td></tr>
+<tr><td>UI-MIR-043</td><td>Related cart payload</td><td>Mimics/Inhibitors, Mature miRNA, and Pri-miRNA related rows use selected SKU values from the related product object.</td><td><code>formItemfromPriMirnaAssays</code></td></tr>
+<tr><td>UI-MIR-044</td><td>Related reagent cart payload</td><td>Related reagent rows use selected SKU, reaction string as UOM, product name, and selected SKU price.</td><td><code>formItemfromRelatedRegent</code></td></tr>
+<tr><td>UI-MIR-045</td><td>Cart location</td><td>Mimics/Inhibitors related rows use location label <code>M/Inhibitor</code> when added to cart.</td><td><code>fnAddItemToCart</code></td></tr>
+<tr><td>UI-MIR-046</td><td>Bioz integration</td><td>Result card includes <code>app-bioz-info-v2</code> using product ID and callback flags for citations and best coverage.</td><td>Template</td></tr>
+<tr><td>UI-MIR-047</td><td>Copy tooltip</td><td>Copy option is shown only when selected browser text includes the product ID or default SKU.</td><td><code>fnDisplayCopyOption</code></td></tr>
+<tr><td>UI-MIR-048</td><td>Advanced specificity header</td><td>For advanced/advanced control products, species prefix in product name can drive specificity header text for mouse, human, or rat anti-targets.</td><td><code>fnSetVariables</code></td></tr>
+</tbody></table>
+<h2>13. Field and Column Requirements</h2>
+<table>
+<thead><tr><th>UI Section</th><th>Field / Column</th><th>Required Behavior</th></tr></thead>
+<tbody>
+<tr><td>Main result header</td><td>Best coverage</td><td>Display when recommended flag is <code>Yes</code>.</td></tr>
+<tr><td>Main result header</td><td>Most citations</td><td>Display when citations equals max citations for the result set.</td></tr>
+<tr><td>Main result body</td><td>Product ID</td><td>Link to miRNA detail route and trigger PDP click analytics.</td></tr>
+<tr><td>Main result body</td><td>Catalog number</td><td>Link to catalog product route using default SKU.</td></tr>
+<tr><td>Main result body</td><td>Product type</td><td>Show Advanced miRNA Assay or miRNA Assay based on product subtype.</td></tr>
+<tr><td>Main result body</td><td>Assay design</td><td>Show for advanced target type; prefix Advanced when the design is human, mouse, or rat.</td></tr>
+<tr><td>Main result body</td><td>Assay name</td><td>Render trusted HTML from product data.</td></tr>
+<tr><td>Main result body</td><td>miRBase Names</td><td>Show for non-advanced products with collapse/expand behavior.</td></tr>
+<tr><td>Main result body</td><td>Species</td><td>Show for non-advanced products with collapse/expand behavior.</td></tr>
+<tr><td>Mimics/Inhibitors tab</td><td>Mimic/Inhibitor</td><td>Display related product type.</td></tr>
+<tr><td>Mimics/Inhibitors tab</td><td>Assay ID</td><td>Link to miRNA details page.</td></tr>
+<tr><td>Mimics/Inhibitors tab</td><td>Species</td><td>Display up to three by default; allow show more/show less.</td></tr>
+<tr><td>Mimics/Inhibitors tab</td><td>Size</td><td>Display dropdown when SKU details exist.</td></tr>
+<tr><td>Mimics/Inhibitors tab</td><td>Price</td><td>Display list price with currency when price is available.</td></tr>
+<tr><td>Mimics/Inhibitors tab</td><td>Your Price</td><td>Display only after login and when add-to-cart eligible.</td></tr>
+<tr><td>Mimics/Inhibitors tab</td><td>Check your price</td><td>Display when not logged in and add-to-cart eligible.</td></tr>
+<tr><td>Mimics/Inhibitors tab</td><td>Add to cart</td><td>Display only when child row eligibility passes and package ID is not <code>Stealth3</code>.</td></tr>
+<tr><td>Commerce card</td><td>Size</td><td>Show selector when more than one SKU detail exists; show static size when exactly one SKU detail exists.</td></tr>
+<tr><td>Commerce card</td><td>Availability</td><td>Convert inventory flag through shared service.</td></tr>
+<tr><td>Commerce card</td><td>Price</td><td>Display list price or message depending on pricing data and add-to-cart eligibility.</td></tr>
+<tr><td>Commerce card</td><td>Your Price</td><td>Display for logged-in users when eligible.</td></tr>
+<tr><td>Commerce card</td><td>Online Price</td><td>Display only when web-only price rules pass.</td></tr>
+<tr><td>Commerce card</td><td>Add to cart</td><td>Display when main add-to-cart rules pass.</td></tr>
+</tbody></table>
+<h2>14. API and Service Contract Summary</h2>
+<table>
+<thead><tr><th>UI Need</th><th>Service / Function</th><th>HTTP Method</th><th>Endpoint</th><th>Parameters</th><th>Expected Response</th></tr></thead>
+<tbody>
+<tr><td>Fetch assay details</td><td><code>viewDetailsService.fnGetData</code></td><td>GET</td><td><code>/order/genome-database/viewAssayDetails</code></td><td><code>assayid</code>, <code>assaytype</code></td><td><code>result</code>, optional <code>plateTargetResult</code>, parsed as objects.</td></tr>
+<tr><td>Fetch array details</td><td><code>viewDetailsService.fnGetArrayDetail</code></td><td>GET</td><td><code>/order/genome-database/viewArrayDetails</code></td><td><code>assayid</code>, <code>assaytype</code></td><td><code>plateResult</code>, <code>mirnaPlateResult</code>, <code>plateTargetResult</code>, <code>result</code>.</td></tr>
+<tr><td>Fetch mimics/inhibitors</td><td><code>mimicsInhibitorsService.fnGetData</code></td><td>GET</td><td><code>/order/genome-database/mirnaAssayDropDowns</code></td><td><code>mirnainhib</code></td><td><code>mirnaProducts</code>.</td></tr>
+<tr><td>Fetch mature miRNA assays</td><td><code>matureMirnaService.fnGetData</code></td><td>GET</td><td><code>/order/genome-database/mirnaAssayDropDowns</code></td><td><code>mirnamature</code></td><td><code>mirnaProducts</code>.</td></tr>
+<tr><td>Fetch pri-miRNA assays</td><td><code>priMirnaService.fnGetData</code></td><td>GET</td><td><code>/order/genome-database/mirnaAssayDropDowns</code></td><td><code>mirnaprimary</code></td><td><code>mirnaProducts</code>.</td></tr>
+<tr><td>Fetch related reagents</td><td><code>relatedReagentsService.fnGetData</code></td><td>GET</td><td><code>/order/genome-database/relatedReagents</code></td><td><code>rev</code>, <code>productType</code>, <code>productSubType</code>, <code>functionality</code>, <code>CID</code>, <code>ICID</code></td><td>Related reagent result object with <code>arrSingleTubes</code>.</td></tr>
+<tr><td>Fetch price</td><td><code>pricingService.async</code></td><td>GET</td><td><code>/order/genome-database/price</code></td><td><code>productType</code>, <code>package_id</code>, <code>thisSku</code>, <code>priceType</code></td><td>Price payload including list/user price fields, currency, action, online price flags.</td></tr>
+<tr><td>Add to cart</td><td><code>fnAddItemToCart</code></td><td>Client cart call</td><td><code>cart.addItemToCart</code></td><td>Cart item payload and location metadata</td><td>Cart update and analytics event.</td></tr>
+</tbody></table>
+<h2>15. Acceptance Criteria</h2>
+<table>
+<thead><tr><th>ID</th><th>Requirement</th><th>Acceptance Criteria</th></tr></thead>
+<tbody>
+<tr><td>AC-UI-MIR-001</td><td>Search result rendering</td><td>Given a result product, the UI renders Product ID, catalog number, product type, assay name, tabs, and commerce card without layout breakage.</td></tr>
+<tr><td>AC-UI-MIR-002</td><td>Product links</td><td>Product ID and catalog links open the expected detail/catalog routes and preserve analytics click handling.</td></tr>
+<tr><td>AC-UI-MIR-003</td><td>Tab visibility</td><td>Tabs are visible only when the corresponding product flags and subtype rules pass.</td></tr>
+<tr><td>AC-UI-MIR-004</td><td>Mimics/Inhibitors data</td><td>Clicking Mimics/Inhibitors calls <code>mimicsInhibitorsService.fnGetData</code> with the current assay ID and renders returned <code>mirnaProducts</code>.</td></tr>
+<tr><td>AC-UI-MIR-005</td><td>Mimics/Inhibitors columns</td><td>Each related row displays type, assay ID, species, size, and commerce actions according to template rules.</td></tr>
+<tr><td>AC-UI-MIR-006</td><td>Species expansion</td><td>Related rows with more than three species show a Show More control and can collapse back to Show Less.</td></tr>
+<tr><td>AC-UI-MIR-007</td><td>Size selection</td><td>Changing size updates selected SKU and triggers pricing refresh.</td></tr>
+<tr><td>AC-UI-MIR-008</td><td>Price display</td><td>List price, user price, web-only price, and login prompt display according to login and eligibility rules.</td></tr>
+<tr><td>AC-UI-MIR-009</td><td>Add-to-cart eligibility</td><td>Add to cart is hidden when pricing action is Contact, Price View, ERR, when SKU is missing, or when package ID contains <code>Stealth3</code> where applicable.</td></tr>
+<tr><td>AC-UI-MIR-010</td><td>Cart payload</td><td>Add-to-cart payload includes SKU, assay ID, product name, price, quantity, UOM, category, and validation fields expected by cart integration.</td></tr>
+<tr><td>AC-UI-MIR-011</td><td>Supporting tabs</td><td>Details, mature miRNA, pri-miRNA, related reagents, assay map, and arrays follow their documented visibility and data-fetch rules.</td></tr>
+<tr><td>AC-UI-MIR-012</td><td>Analytics</td><td>Tab opens, size changes, PDP clicks, map usage, and add-to-cart actions continue to call <code>gsdOmnitureService</code>.</td></tr>
+</tbody></table>
+<h2>16. QA Test Matrix</h2>
+<table>
+<thead><tr><th>Test Area</th><th>Scenario</th><th>Expected Result</th></tr></thead>
+<tbody>
+<tr><td>Route</td><td>Load miRNA result URL with wildcard keyword.</td><td>Result page renders without script errors.</td></tr>
+<tr><td>Result badges</td><td>Product has <code>recommended = Yes</code>.</td><td>Best coverage indicator is displayed.</td></tr>
+<tr><td>Result badges</td><td>Product citations equal <code>maxCitationsNumber</code>.</td><td>Most citations indicator is displayed.</td></tr>
+<tr><td>Tabs</td><td>Product has <code>hasMI = true</code>.</td><td>Mimics/Inhibitors tab is visible.</td></tr>
+<tr><td>Tabs</td><td>Product has <code>hasMI = false</code>.</td><td>Mimics/Inhibitors tab is hidden.</td></tr>
+<tr><td>Tabs</td><td>Product subtype is <code>advanced</code>.</td><td>Mature miRNA Assays tab is hidden even when mature data exists.</td></tr>
+<tr><td>Tabs</td><td>Product has <code>hasPri = true</code>.</td><td>Pri-miRNA Assays tab is visible.</td></tr>
+<tr><td>Mimics/Inhibitors</td><td>User opens tab.</td><td>API call uses <code>mirnainhib={assayId}</code> and rows render from <code>mirnaProducts</code>.</td></tr>
+<tr><td>Mimics/Inhibitors species</td><td>Row has more than three species.</td><td>Only three species are shown initially with show more/show less control.</td></tr>
+<tr><td>Size dropdown</td><td>Row package has multiple SKU details.</td><td>Size dropdown renders and default option is first SKU detail.</td></tr>
+<tr><td>Login</td><td>User is not logged in and product is eligible.</td><td>Check your price is shown.</td></tr>
+<tr><td>Login</td><td>User logs in.</td><td>User price refreshes using <code>priceType=your</code>.</td></tr>
+<tr><td>Commerce</td><td>Pricing action starts with Contact, Price View, or ERR.</td><td>Add to cart is hidden.</td></tr>
+<tr><td>Commerce</td><td>Package ID contains <code>Stealth3</code>.</td><td>Commerce actions are hidden where template suppresses them.</td></tr>
+<tr><td>Analytics</td><td>User clicks PDP link or opens Mimics/Inhibitors tab.</td><td>Corresponding Omniture calls execute.</td></tr>
+</tbody></table>
+<h2>17. Validation Observations and Suggested Improvements</h2>
+<table>
+<thead><tr><th>ID</th><th>Observation</th><th>Risk</th><th>Suggested Improvement</th></tr></thead>
+<tbody>
+<tr><td>VAL-UI-MIR-001</td><td><code>mirna-mimics-inhibitors-single-tube.template.html</code> calls <code>$ctrl.fnSetPrice()</code> on size change, but the child component exposes <code>setPrice</code>, not <code>fnSetPrice</code>.</td><td>Size dropdown changes may not refresh price correctly or may throw a runtime error.</td><td>Align template and component method names; add unit/UI test for size change price refresh.</td></tr>
+<tr><td>VAL-UI-MIR-002</td><td>Child template references <code>$ctrl.relatedReagents.data.prodDesc</code>, but the component bindings include <code>mimicsInhibitors</code>, <code>onLogin</code>, <code>onAddToCart</code>, and <code>packageObjects</code>.</td><td>Product description binding may be undefined or copied from another component.</td><td>Confirm intended field and update binding to a <code>mimicsInhibitors</code> field if needed.</td></tr>
+<tr><td>VAL-UI-MIR-003</td><td><code>mimicsInhibitorsService.fnGetData(assayId, assayType)</code> accepts <code>assayType</code>, but the service does not use it in the API request.</td><td>Future developers may assume assay type affects related product retrieval when it does not.</td><td>Remove unused argument or document why it is intentionally unused.</td></tr>
+<tr><td>VAL-UI-MIR-004</td><td>Several services declare <code>var bolDone = bolDone;</code> and <code>bolWorking</code>, but caching / working-state protections are incomplete or unused.</td><td>Duplicate calls may occur and service state is harder to reason about.</td><td>Clean up queue/caching variables and add tests for repeated tab opens.</td></tr>
+<tr><td>VAL-UI-MIR-005</td><td><code>relatedReagentsService</code> has <code>bolWorking = true</code> commented out.</td><td>Concurrent related reagent calls may not be suppressed as intended.</td><td>Reinstate or remove working-state logic after confirming desired behavior.</td></tr>
+<tr><td>VAL-UI-MIR-006</td><td>Child component <code>fnGetPrice</code> and <code>fnGetUserPrice</code> both return <code>priceStringWithoutCurrencyCode</code>.</td><td>Your Price may not be semantically different from list price if backend returns separate user price fields.</td><td>Confirm pricing response contract and update child display helpers if needed.</td></tr>
+<tr><td>VAL-UI-MIR-007</td><td>Related repos were verified only at metadata level for this UI PRD.</td><td>Hidden backend/shared rules may exist outside the inspected UI repo.</td><td>Run repository-wide searches for miRNA, mimics, inhibitors, <code>mirnainhib</code>, and endpoint controllers across all five repos before final implementation sign-off.</td></tr>
+<tr><td>VAL-UI-MIR-008</td><td><code>magellan-data-scripts</code> metadata fetch failed during this review.</td><td>Data loading or product flag derivation rules may be missing from this PRD.</td><td>Re-run repo access and inspect scripts that populate <code>hasMI</code>, <code>hasMature</code>, <code>hasPri</code>, <code>packageObjs</code>, and pricing attributes.</td></tr>
+</tbody></table>
+<h2>18. Developer Implementation Checklist</h2>
+<table>
+<thead><tr><th>Area</th><th>Checklist Item</th></tr></thead>
+<tbody>
+<tr><td>Component behavior</td><td>Confirm <code>appMirnaSearchResult</code> still owns the result card and tab orchestration for the miRNA result route.</td></tr>
+<tr><td>Tab rules</td><td>Add or update tests for <code>hasMI</code>, <code>hasMature</code>, <code>hasPri</code>, subtype, control, and array count visibility rules.</td></tr>
+<tr><td>Mimics/Inhibitors</td><td>Fix or validate the child template size-change handler before enhancing related product behavior.</td></tr>
+<tr><td>Price</td><td>Verify price response fields for list price, user price, web-only price, action, and currency display.</td></tr>
+<tr><td>Commerce</td><td>Validate cart payloads for main result products, mimic/inhibitor rows, mature rows, pri-miRNA rows, and related reagent rows.</td></tr>
+<tr><td>Login</td><td>Confirm login status watchers refresh prices and preserve selected SKU state.</td></tr>
+<tr><td>Analytics</td><td>Confirm all major user interactions continue to report through <code>gsdOmnitureService</code>.</td></tr>
+<tr><td>Accessibility</td><td>Validate keyboard access for tab links, dropdowns, popups, show more/show less, and add-to-cart controls.</td></tr>
+<tr><td>Error handling</td><td>Add visible fallback behavior for failed tab service calls if not already handled by the parent page.</td></tr>
+<tr><td>Multi-repo validation</td><td>Complete source searches in product-service, etools, data-scripts, and core before using this as a final engineering sign-off document.</td></tr>
+</tbody></table>
+<h2>19. Traceability Matrix</h2>
+<table>
+<thead><tr><th>Requirement Area</th><th>Primary Function / Template</th><th>Service / Endpoint</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Main result rendering</td><td><code>appMirnaSearchResult</code>, <code>mirna-search-result.template.html</code></td><td>Search result data provider outside inspected component</td><td>Product data must include <code>data</code>, <code>packageObject</code>, <code>packageObjs</code>, flags, and pricing fields.</td></tr>
+<tr><td>Product ID and PDP analytics</td><td><code>fnPDPOmniClick</code>, template link</td><td><code>/order/genome-database/details/microrna/{productID}</code></td><td>Opens detail page and records click.</td></tr>
+<tr><td>Mimics/Inhibitors tab</td><td><code>setTab(&#x27;mimics-inhibitors&#x27;)</code></td><td><code>/order/genome-database/mirnaAssayDropDowns?mirnainhib={assayId}</code></td><td>Renders child component rows.</td></tr>
+<tr><td>Child row pricing</td><td><code>fnTrackSelectedOption</code>, <code>setPrice</code></td><td><code>/order/genome-database/price</code></td><td>Triggered by selected SKU and login changes.</td></tr>
+<tr><td>Main commerce</td><td><code>setDefaultSku</code>, <code>getDefaultSku</code>, <code>getIsAddToCart</code>, <code>fnSetPricingData</code></td><td><code>/order/genome-database/price</code></td><td>Controls size, availability, price, web-only price, and add-to-cart button.</td></tr>
+<tr><td>Cart action</td><td><code>fnAddItemToCart</code></td><td><code>cart.addItemToCart</code></td><td>Builds payload depending on source module.</td></tr>
+<tr><td>Details tab</td><td><code>setTab(&#x27;view-details&#x27;)</code></td><td><code>/order/genome-database/viewAssayDetails</code></td><td>Populates <code>arrViewDetails</code> and subtype flags.</td></tr>
+<tr><td>Mature tab</td><td><code>setTab(&#x27;mature-mirna-assays&#x27;)</code></td><td><code>/order/genome-database/mirnaAssayDropDowns?mirnamature={assayId}</code></td><td>Maps package objects for child rows.</td></tr>
+<tr><td>Pri-miRNA tab</td><td><code>setTab(&#x27;pri-mirna-assays&#x27;)</code></td><td><code>/order/genome-database/mirnaAssayDropDowns?mirnaprimary={assayId}</code></td><td>Maps package objects for child rows.</td></tr>
+<tr><td>Related reagents</td><td><code>setTab(&#x27;related-reagents&#x27;)</code></td><td><code>/order/genome-database/relatedReagents</code></td><td>Uses product type and product subtype.</td></tr>
+<tr><td>Assay map</td><td><code>showAlignmentMap</code>, <code>loadAlignmentMap</code>, <code>fnMapThis</code></td><td>Lazy alignment map module</td><td>Available only for eligible non-control subtypes.</td></tr>
+</tbody></table>
+<h2>20. Open Questions</h2>
+<table>
+<thead><tr><th>ID</th><th>Question</th><th>Owner / Follow-up</th></tr></thead>
+<tbody>
+<tr><td>OQ-UI-MIR-001</td><td>Which repo owns the backend route that serves <code>/order/rnai/miRNA/result</code> in the current deployment?</td><td>Confirm with Magellan search/backend owner.</td></tr>
+<tr><td>OQ-UI-MIR-002</td><td>Should the Mimics/Inhibitors child row display a product description, and if yes, which field should it use?</td><td>Confirm product owner and UI developer.</td></tr>
+<tr><td>OQ-UI-MIR-003</td><td>Should child row Your Price use a separate user-price field rather than the same string returned by <code>fnGetPrice</code>?</td><td>Confirm pricing service contract.</td></tr>
+<tr><td>OQ-UI-MIR-004</td><td>Is <code>Stealth3</code> suppression required for both main result and all child related product rows?</td><td>Confirm commerce/product owner.</td></tr>
+<tr><td>OQ-UI-MIR-005</td><td>Which data scripts populate <code>hasMI</code>, <code>hasMature</code>, <code>hasPri</code>, <code>packageObjs</code>, and citation/recommended flags?</td><td>Validate in <code>magellan-data-scripts</code> after repo access succeeds.</td></tr>
+</tbody></table></body></html>

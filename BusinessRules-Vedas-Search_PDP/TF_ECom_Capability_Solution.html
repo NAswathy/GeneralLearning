@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>TF ECom Site Capability Solution</title>
+  <style>
+    @page {
+      size: 8.5in 11in;
+      margin: 0.75in;
+    }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #202124;
+      font-size: 10.5pt;
+      line-height: 1.45;
+    }
+    h1 {
+      color: #d71920;
+      font-size: 20pt;
+      margin: 22pt 0 8pt;
+      border-bottom: 2px solid #d71920;
+      padding-bottom: 4pt;
+    }
+    h2 {
+      color: #333f48;
+      font-size: 14pt;
+      margin: 16pt 0 6pt;
+    }
+    h3 {
+      color: #333f48;
+      font-size: 11.5pt;
+      margin: 12pt 0 4pt;
+    }
+    p {
+      margin: 4pt 0 8pt;
+    }
+    ul {
+      margin-top: 3pt;
+      margin-bottom: 8pt;
+    }
+    li {
+      margin-bottom: 3pt;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8pt 0 14pt;
+      table-layout: fixed;
+    }
+    th {
+      background: #333f48;
+      color: #ffffff;
+      font-weight: bold;
+      text-align: left;
+      border: 1px solid #333f48;
+      padding: 6pt;
+      vertical-align: top;
+    }
+    td {
+      border: 1px solid #b7b7b7;
+      padding: 6pt;
+      vertical-align: top;
+      word-wrap: break-word;
+    }
+    .cover {
+      background: #f5f7f8;
+      border-left: 8pt solid #d71920;
+      padding: 20pt 22pt;
+      margin-bottom: 18pt;
+    }
+    .cover h1 {
+      border: 0;
+      margin: 0 0 8pt;
+      font-size: 25pt;
+    }
+    .subtitle {
+      color: #333f48;
+      font-size: 13pt;
+      margin-bottom: 18pt;
+    }
+    .meta td:first-child {
+      width: 28%;
+      background: #f2f2f2;
+      font-weight: bold;
+      color: #333f48;
+    }
+    .callout {
+      background: #fff7f7;
+      border: 1px solid #f0b3b3;
+      padding: 8pt 10pt;
+      margin: 8pt 0 12pt;
+    }
+    .toc {
+      columns: 2;
+      margin: 8pt 0 16pt;
+    }
+    .toc div {
+      margin-bottom: 4pt;
+    }
+    .status {
+      font-weight: bold;
+      color: #d71920;
+    }
+    .small {
+      font-size: 9pt;
+      color: #5f6368;
+    }
+  </style>
+</head>
+<body>
+  <div class="cover">
+    <h1>TF ECom Site Capability Solution</h1>
+    <div class="subtitle">Capability solution document for Thermo Fisher Scientific digital commerce experience</div>
+    <table class="meta">
+      <tr><td>Document status</td><td>Draft for stakeholder review</td></tr>
+      <tr><td>Prepared date</td><td>26 June 2026</td></tr>
+      <tr><td>Prepared for</td><td>Business, Product, Architecture, Engineering, UX, Analytics, Support, Compliance, and Operations stakeholders</td></tr>
+      <tr><td>Source template</td><td>Capability Solution Template Title</td></tr>
+      <tr><td>Reference input</td><td>Korea Partner Portal capability solution and TF ECom search/PDP requirements context from repository notes</td></tr>
+    </table>
+  </div>
+
+  <h1>Table of Contents</h1>
+  <div class="toc">
+    <div>1. Jira Align Links</div>
+    <div>2. Solution Analysis Definition of Ready Checklist</div>
+    <div>3. Solution Stakeholders</div>
+    <div>4. Summary</div>
+    <div>5. Scope</div>
+    <div>6. Assumptions, Constraints, and Dependencies</div>
+    <div>7. Open Questions</div>
+    <div>8. Acceptance Criteria</div>
+    <div>9. User/System Interactions</div>
+    <div>10. Architecture Solution</div>
+    <div>11. Feature Information</div>
+    <div>12. ART and Team Dependencies</div>
+    <div>13. Solution Review Handoff</div>
+    <div>14. Supplementary Information</div>
+  </div>
+
+  <h1>Jira Align Links</h1>
+  <table>
+    <tr><th style="width: 30%;">Item</th><th>Link / Reference</th></tr>
+    <tr><td>Jira Align Portfolio Link</td><td>TBD</td></tr>
+    <tr><td>Jira Align Capability Link</td><td>TBD</td></tr>
+    <tr><td>Related Epic / Feature Links</td><td>TBD - to be linked once TF ECom capability and feature records are confirmed.</td></tr>
+  </table>
+
+  <h1>Solution Analysis Definition of Ready Checklist</h1>
+  <table>
+    <tr><th style="width: 36%;">Readiness Item</th><th style="width: 14%;">Status</th><th>Notes</th></tr>
+    <tr><td>Problem statement well-defined</td><td>Yes</td><td>TF ECom requires a consistent product discovery, evaluation, cart, checkout, and post-purchase experience across supported customer contexts.</td></tr>
+    <tr><td>Customer/business requirements well-defined</td><td>Partial</td><td>Core commerce journey is defined. Final regional, entitlement, and business-priority details need stakeholder confirmation.</td></tr>
+    <tr><td>Business process and operations alignment confirmed</td><td>Partial</td><td>Requires sign-off from product, customer support, order management, ERP integration, and analytics owners.</td></tr>
+    <tr><td>Conceptual user journey / UX / wireframes required</td><td>Yes</td><td>Existing TF ECom patterns should be reused for search, PDP, cart, checkout, quote, and order history flows.</td></tr>
+    <tr><td>CIS / regulatory requirements defined</td><td>Partial</td><td>Security, privacy, cookie, accessibility, and approved product notice requirements must be reviewed before implementation.</td></tr>
+    <tr><td>Success criteria / business outcomes measurable</td><td>Yes</td><td>Conversion, add-to-cart rate, checkout completion, search-to-PDP rate, pricing/availability success, and support deflection are measurable.</td></tr>
+    <tr><td>Solution investment level identified</td><td>TBD</td><td>Recommended approach is MVP using existing platform capabilities with staged enhancements.</td></tr>
+    <tr><td>Analytics needs identified</td><td>Yes</td><td>Minimum event coverage is required for discovery, PDP, cart, checkout, order history, quote, errors, and support paths.</td></tr>
+    <tr><td>NFRs identified</td><td>Partial</td><td>Performance, availability, accessibility, security, privacy, observability, and resiliency targets need final thresholds.</td></tr>
+    <tr><td>Funding secured</td><td>TBD</td><td>To be confirmed by portfolio/product leadership.</td></tr>
+    <tr><td>Architecture review support required</td><td>Yes</td><td>Cross-team commerce, data, integration, and analytics dependencies require architecture review.</td></tr>
+  </table>
+
+  <h1>Solution Stakeholders</h1>
+  <table>
+    <tr><th style="width: 34%;">Role</th><th>Name / Team</th><th>Responsibility</th></tr>
+    <tr><td>Epic Owner and/or Product Manager</td><td>TBD</td><td>Owns business outcomes, scope priority, and product acceptance.</td></tr>
+    <tr><td>Solution Partner / Strategic Initiative Partner</td><td>TBD</td><td>Coordinates capability alignment across business and technology groups.</td></tr>
+    <tr><td>IT Product Owner(s)</td><td>TBD - ECom product owners</td><td>Own team backlog, requirements refinement, and release acceptance.</td></tr>
+    <tr><td>Lead Information Architect</td><td>TBD</td><td>Validates solution architecture, data flow, integrations, and non-functional approach.</td></tr>
+    <tr><td>User Experience Designer</td><td>TBD</td><td>Ensures user journeys follow TF ECom UX patterns and accessibility expectations.</td></tr>
+    <tr><td>Analytics Support</td><td>TBD</td><td>Defines tracking plan, dashboards, and release validation for measurement.</td></tr>
+    <tr><td>Solution Leads / Architects</td><td>TBD</td><td>Coordinate solution design across search, PDP, cart, checkout, identity, and integrations.</td></tr>
+    <tr><td>CIS</td><td>TBD</td><td>Security review, identity, authorization, and application risk controls.</td></tr>
+    <tr><td>Privacy / Legal / Compliance</td><td>TBD</td><td>Review privacy, cookie, accessibility, legal notice, and regulatory messaging needs.</td></tr>
+    <tr><td>SMEs / Advisors - CCG IT and Platform</td><td>TBD</td><td>Provide technical details for Hybris/catalog, Platform API, Magellan, cart, checkout, and post-purchase services.</td></tr>
+    <tr><td>SMEs / Advisors - Business Stakeholders</td><td>TBD</td><td>Confirm commercial rules, order process, support model, and regional business needs.</td></tr>
+  </table>
+
+  <h1>Summary</h1>
+  <h2>Lean Business Case / Problem Statement</h2>
+  <table>
+    <tr><th style="width: 28%;">Area</th><th>Details</th></tr>
+    <tr>
+      <td>Epic Statement</td>
+      <td>For Thermo Fisher customers and internal support users, the TF ECom site must provide a reliable and consistent digital commerce experience from product discovery through purchase and post-purchase tracking. The solution should connect product data, entitlement, pricing, availability, cart, checkout, quote, and order history capabilities so users can evaluate products and complete transactions with confidence.</td>
+    </tr>
+    <tr>
+      <td>Business Outcome Hypothesis</td>
+      <td>By standardizing the end-to-end TF ECom journey on existing platform services and clear integration contracts, Thermo Fisher can improve product discoverability, reduce purchase friction, increase add-to-cart and checkout completion, improve support deflection, and create better visibility into commerce performance.</td>
+    </tr>
+    <tr>
+      <td>Leading Indicators</td>
+      <td>Search-to-PDP rate, PDP engagement, price and availability success rate, add-to-cart rate, checkout completion, quote submission, order history visibility, error/fallback rate, and support path usage.</td>
+    </tr>
+    <tr>
+      <td>Business Analysis Summary</td>
+      <td>The TF ECom site depends on coordinated behavior across identity, catalog, search, PDP, pricing, availability, cart, checkout, payment/order submission, post-purchase, analytics, and support. The MVP should reuse existing patterns wherever possible and limit custom development to confirmed gaps.</td>
+    </tr>
+    <tr>
+      <td>CAS / Support Considerations</td>
+      <td>Support teams need visibility into user context, country, login state, selected SKU, price action, availability result, cart state, checkout errors, quote ID, order ID, and failed service responses.</td>
+    </tr>
+  </table>
+
+  <h1>Scope</h1>
+  <h2>In-Scope</h2>
+  <ul>
+    <li>Customer identity, login, registration, and account-context handling for supported TF ECom journeys.</li>
+    <li>Country, language, cookie, and user-context rules that affect catalog, pricing, availability, and checkout behavior.</li>
+    <li>Catalog data ingestion and product visibility through Hybris/catalog, Platform API, and search index flows.</li>
+    <li>Search and product listing behavior, including product cards, filters, sort, entitlement, and no-result handling.</li>
+    <li>PDP and Magellan product detail behavior, including product content, specifications, images, lifecycle messaging, package selection, pricing, availability, and Add to Cart eligibility.</li>
+    <li>Cart behavior for selected SKUs, quantity, price, availability, line-item messages, promotions, and validation.</li>
+    <li>Checkout behavior for customer details, shipping, billing, quote handoff, order submission, and integration with downstream order systems.</li>
+    <li>Post-purchase experience including order confirmation, order history, order status, quote/order references, and customer service visibility.</li>
+    <li>Analytics and monitoring for the full commerce funnel and critical service failure paths.</li>
+    <li>Release readiness, test planning, operational handoff, and support playbook alignment.</li>
+  </ul>
+
+  <h2>Out-of-Scope</h2>
+  <ul>
+    <li>Full ERP replacement or migration work outside the commerce capability boundary.</li>
+    <li>Manual correction of product records outside approved catalog governance processes.</li>
+    <li>New payment, tax, or order-management platform selection unless separately approved.</li>
+    <li>New regional dealer portal capabilities unless explicitly added as a TF ECom feature.</li>
+    <li>Advanced personalization or recommendation algorithms beyond existing platform capabilities for MVP.</li>
+  </ul>
+
+  <h2>MVP Requirements</h2>
+  <table>
+    <tr><th style="width: 24%;">Capability</th><th>MVP Requirement</th></tr>
+    <tr><td>Accounts / Identity</td><td>Support login, registration, account selection, entitlement context, and secure user-session propagation across commerce services.</td></tr>
+    <tr><td>Catalog / Hybris</td><td>Load product data, attributes, images, brands, lifecycle statuses, regulatory notices, and localized content needed by search and PDP.</td></tr>
+    <tr><td>Platform API</td><td>Expose core product attributes, entitlement data, price-ready SKU identifiers, and content required by search, PDP, cart, and checkout.</td></tr>
+    <tr><td>Search</td><td>Return relevant products with correct filters, availability indicators where supported, product badges, and country/user-context visibility.</td></tr>
+    <tr><td>PDP / Magellan</td><td>Display product identity, package options, specifications, content sections, lifecycle banners, price, availability, and Add to Cart state.</td></tr>
+    <tr><td>Pricing / Availability</td><td>Resolve price and availability by SKU, country, account, quantity, and entitlement context with safe fallback states.</td></tr>
+    <tr><td>Cart</td><td>Support SKU add, quantity update, price recalculation, availability messages, validation, promotion handling, and transition to checkout.</td></tr>
+    <tr><td>Checkout</td><td>Collect and validate shipping/billing details, quote or purchase flow data, final totals, and order submission response.</td></tr>
+    <tr><td>Post Purchase</td><td>Store and display order confirmation, order status, quote references, and order history for supported users.</td></tr>
+    <tr><td>Analytics</td><td>Track discovery, PDP, cart, checkout, order, quote, error, and support events end to end.</td></tr>
+  </table>
+
+  <h2>Additional Requirements Considered in Solution</h2>
+  <ul>
+    <li>Accessibility compliance for keyboard navigation, semantic structure, color contrast, and screen-reader behavior.</li>
+    <li>Operational dashboards for service health and commerce funnel performance.</li>
+    <li>Support diagnostics for reproducing customer-visible commerce states.</li>
+    <li>Experimentation hooks for measured improvements after MVP stabilization.</li>
+    <li>Localized content and translation support for market-specific rollout.</li>
+  </ul>
+
+  <h2>Other Scope Considerations</h2>
+  <table>
+    <tr><th style="width: 32%;">Consideration</th><th>Recommendation</th></tr>
+    <tr><td>Wireframes Required at Solution Level?</td><td>Yes. Reuse existing TF ECom patterns and document changes for search, PDP, cart, checkout, and post-purchase flows.</td></tr>
+    <tr><td>Legal or Regulatory Considerations</td><td>Confirm approved product notices, privacy/cookie requirements, accessibility, order terms, country restrictions, and product claim handling.</td></tr>
+    <tr><td>Business Processes Impacted</td><td>Product discovery, product evaluation, pricing, inventory visibility, quote workflow, order capture, post-purchase support, and reporting.</td></tr>
+    <tr><td>Analytics and Reporting Considerations</td><td>Define required events, dimensions, error taxonomy, dashboard ownership, and release validation before go-live.</td></tr>
+    <tr><td>Channel Considerations</td><td>Confirm B2C, B2B, customer service, partner, quote, and any SCMS/PSCMS integration expectations.</td></tr>
+  </table>
+
+  <h1>Assumptions, Constraints, and Dependencies</h1>
+  <h2>Assumptions and Constraints</h2>
+  <table>
+    <tr><th style="width: 12%;">ID</th><th>Description</th></tr>
+    <tr><td>A-01</td><td>Existing TF ECom platform capabilities will be reused for discovery, PDP, cart, checkout, and post-purchase wherever they meet business needs.</td></tr>
+    <tr><td>A-02</td><td>Product visibility, pricing, availability, and orderability depend on country, login state, customer/account context, entitlement, and SKU/package selection.</td></tr>
+    <tr><td>A-03</td><td>Source product records and commercial rules are owned by upstream catalog, ERP, pricing, and availability systems.</td></tr>
+    <tr><td>A-04</td><td>Service failures must fail gracefully and provide user-safe messages rather than exposing inconsistent purchase states.</td></tr>
+    <tr><td>A-05</td><td>Performance and availability targets must be confirmed as formal NFRs before final architecture sign-off.</td></tr>
+    <tr><td>A-06</td><td>Implementation sequencing will be feature-based, with high-risk integrations validated early.</td></tr>
+  </table>
+
+  <h2>Dependencies</h2>
+  <table>
+    <tr><th style="width: 12%;">ID</th><th>Dependency</th><th>Owning Area</th><th>Impact if Delayed</th></tr>
+    <tr><td>D-01</td><td>Product catalog attributes, images, regulatory notices, lifecycle status, and localized content.</td><td>Catalog / Hybris</td><td>Incomplete search/PDP content and potential compliance risk.</td></tr>
+    <tr><td>D-02</td><td>Entitlement and customer/account context services.</td><td>Identity / Platform</td><td>Incorrect product visibility, pricing, or orderability.</td></tr>
+    <tr><td>D-03</td><td>Pricing, availability, and orderability APIs with country/account/SKU support.</td><td>Pricing / Availability</td><td>Cart and checkout cannot reliably present purchasable states.</td></tr>
+    <tr><td>D-04</td><td>Cart, checkout, quote, and order submission services.</td><td>Commerce Platform</td><td>Purchase flow cannot be completed end to end.</td></tr>
+    <tr><td>D-05</td><td>Order status and post-purchase data availability.</td><td>Post Purchase / ERP</td><td>Order history and support visibility incomplete.</td></tr>
+    <tr><td>D-06</td><td>Analytics event schema, tagging implementation, and dashboard ownership.</td><td>Analytics</td><td>Business outcomes and operational issues cannot be measured.</td></tr>
+    <tr><td>D-07</td><td>Security, privacy, accessibility, and compliance review.</td><td>CIS / Legal / Compliance</td><td>Release readiness risk and potential rework.</td></tr>
+  </table>
+
+  <h1>Open Questions</h1>
+  <table>
+    <tr><th style="width: 10%;">ID</th><th>Question</th><th style="width: 25%;">Owner</th><th style="width: 18%;">Status</th></tr>
+    <tr><td>OQ-01</td><td>Which TF ECom markets, customer types, and product families are included in the initial release?</td><td>Product / Business</td><td>Open</td></tr>
+    <tr><td>OQ-02</td><td>Which ERP types and downstream order systems must be supported for MVP?</td><td>Architecture / ERP</td><td>Open</td></tr>
+    <tr><td>OQ-03</td><td>What are the final NFR thresholds for page load, API latency, checkout uptime, and error budgets?</td><td>Architecture / SRE</td><td>Open</td></tr>
+    <tr><td>OQ-04</td><td>Which analytics platform and dashboard will serve as the source of truth for commerce funnel reporting?</td><td>Analytics</td><td>Open</td></tr>
+    <tr><td>OQ-05</td><td>What support diagnostic fields are required for customer service teams?</td><td>Support / Product</td><td>Open</td></tr>
+    <tr><td>OQ-06</td><td>Which legal, regulatory, cookie, accessibility, and product notice requirements must block launch if incomplete?</td><td>Legal / CIS / Compliance</td><td>Open</td></tr>
+  </table>
+
+  <h1>Solution Intent Details</h1>
+  <table>
+    <tr><th style="width: 18%;">ID</th><th style="width: 25%;">Description</th><th>Recommended Solution</th><th style="width: 18%;">Decision</th></tr>
+    <tr><td>SI-01</td><td>Functional Areas</td><td>Identity, catalog, search, PDP, pricing, availability, cart, checkout, quote, post-purchase, analytics, and support.</td><td>Recommended</td></tr>
+    <tr><td>SI-02</td><td>Data Flows</td><td>Catalog and ERP data feed platform APIs and search indexes. User/account context drives entitlement, price, availability, orderability, and order submission.</td><td>Pending review</td></tr>
+    <tr><td>SI-03</td><td>Integrations</td><td>Use existing integrations for Hybris/catalog, Platform API, Magellan, pricing, availability, cart, checkout, post-purchase, analytics, and support diagnostics.</td><td>Recommended</td></tr>
+    <tr><td>SI-04</td><td>UX / Wireframes</td><td>Reuse approved TF ECom UX patterns and document deviations for new or changed behavior.</td><td>Recommended</td></tr>
+    <tr><td>SI-05</td><td>Technical Approach</td><td>Prioritize platform reuse, API contract validation, feature flags for rollout, observability, and graceful fallback states.</td><td>Recommended</td></tr>
+    <tr><td>SI-06</td><td>Content Alignment</td><td>Validate product content, notices, images, attributes, and localized copy through catalog governance.</td><td>Pending review</td></tr>
+    <tr><td>SI-07</td><td>Identity Alignment</td><td>Confirm login, registration, account context, entitlement, and invited/linked user behavior for supported customer types.</td><td>Pending review</td></tr>
+    <tr><td>SI-08</td><td>Analytics Alignment</td><td>Define event schema and dashboard ownership before release readiness sign-off.</td><td>Pending review</td></tr>
+    <tr><td>SI-09</td><td>Security / Privacy Assessment</td><td>Complete CIS, privacy, cookie, accessibility, and compliance review before production launch.</td><td>Required</td></tr>
+  </table>
+
+  <h1>Acceptance Criteria</h1>
+  <h2>Feature 1: Product Discovery and PDP</h2>
+  <table>
+    <tr><th style="width: 16%;">ID</th><th>Acceptance Criteria</th></tr>
+    <tr><td>AC-01</td><td>Search returns only products visible for the selected country, customer/account context, and entitlement rules.</td></tr>
+    <tr><td>AC-02</td><td>Search results display product identity, image, key attributes, lifecycle/status indicators, and supported commerce action cues.</td></tr>
+    <tr><td>AC-03</td><td>PDP displays product title, catalog number, package options, specifications, images, content sections, approved notices, and lifecycle messaging where data exists.</td></tr>
+    <tr><td>AC-04</td><td>Changing package or SKU refreshes price, availability, banner, product documents, Add to Cart state, and analytics context.</td></tr>
+    <tr><td>AC-05</td><td>If product content, image, pricing, availability, or related service data fails, the page remains usable and shows a safe fallback state.</td></tr>
+  </table>
+
+  <h2>Feature 2: Commerce, Cart, Checkout, and Post Purchase</h2>
+  <table>
+    <tr><th style="width: 16%;">ID</th><th>Acceptance Criteria</th></tr>
+    <tr><td>AC-06</td><td>Pricing and availability are resolved by selected SKU, quantity, country, account, entitlement, and login state.</td></tr>
+    <tr><td>AC-07</td><td>Add to Cart is enabled only for orderable products and disabled for invalid, restricted, long-term unavailable, or unsupported purchase states.</td></tr>
+    <tr><td>AC-08</td><td>Cart recalculates totals, validates quantity, displays SKU-level messages, and prevents checkout when blocking issues exist.</td></tr>
+    <tr><td>AC-09</td><td>Checkout validates required customer, shipping, billing, quote, and order-submission data before final submit.</td></tr>
+    <tr><td>AC-10</td><td>Order confirmation and post-purchase views show order reference, status, submitted items, quote references where applicable, and support path.</td></tr>
+  </table>
+
+  <h2>Feature 3: Analytics, Operations, and Support</h2>
+  <table>
+    <tr><th style="width: 16%;">ID</th><th>Acceptance Criteria</th></tr>
+    <tr><td>AC-11</td><td>Analytics events are emitted for search, PDP, package change, price, availability, Add to Cart, cart update, checkout step, order submit, quote, error, and support interactions.</td></tr>
+    <tr><td>AC-12</td><td>Monitoring dashboards include service success/error rates, latency, fallback usage, checkout errors, and order submission outcomes.</td></tr>
+    <tr><td>AC-13</td><td>Support users can identify user context, selected SKU, country, account, price/availability result, cart state, checkout error, quote ID, and order ID where available.</td></tr>
+    <tr><td>AC-14</td><td>Release readiness includes product, architecture, analytics, UX, support, CIS, privacy, and compliance sign-off.</td></tr>
+  </table>
+
+  <h1>User/System Interactions</h1>
+  <table>
+    <tr><th style="width: 10%;">Step</th><th>User Action</th><th>System Response</th><th>Primary Systems</th></tr>
+    <tr><td>1</td><td>User lands on TF ECom site or searches for a product.</td><td>Country, language, cookie, and user/account context are established. Search returns eligible products.</td><td>Web UI, Identity, Search, Platform API</td></tr>
+    <tr><td>2</td><td>User opens PDP.</td><td>Product content, package options, lifecycle state, price, availability, documents, and action state are loaded.</td><td>Magellan/PDP, Catalog, Pricing, Availability</td></tr>
+    <tr><td>3</td><td>User selects package and quantity.</td><td>Price, availability, Add to Cart state, SKU-level messages, and analytics context refresh.</td><td>PDP, Pricing, Availability</td></tr>
+    <tr><td>4</td><td>User adds product to cart.</td><td>Cart validates SKU and quantity, recalculates totals, applies rules/messages, and persists cart state.</td><td>Cart, Pricing, Availability</td></tr>
+    <tr><td>5</td><td>User proceeds to checkout.</td><td>Checkout collects and validates shipping, billing, quote, and purchase data.</td><td>Checkout, Identity, Order Services</td></tr>
+    <tr><td>6</td><td>User submits order or quote.</td><td>Order/quote is submitted to downstream systems and confirmation is displayed.</td><td>Checkout, ERP/Order Management, Post Purchase</td></tr>
+    <tr><td>7</td><td>User reviews order history or contacts support.</td><td>Order/quote status and diagnostic context are available for self-service and support follow-up.</td><td>Post Purchase, Support Tools, Analytics</td></tr>
+  </table>
+
+  <h1>Architecture Solution</h1>
+  <div class="callout">
+    <strong>Recommended architecture direction:</strong> Reuse existing TF ECom platform components and validate cross-team API contracts early. Apply feature flags, observability, and safe fallback behavior for price, availability, cart, checkout, and post-purchase services.
+  </div>
+  <table>
+    <tr><th style="width: 22%;">Layer</th><th>Capabilities</th><th>Key Notes</th></tr>
+    <tr><td>Experience Layer</td><td>TF ECom Web UI, Search Results, PDP/Magellan, Cart, Checkout, Post Purchase</td><td>Consistent UX patterns, accessibility, localization, and analytics instrumentation.</td></tr>
+    <tr><td>Platform API Layer</td><td>Product APIs, entitlement, price/availability orchestration, cart APIs, checkout APIs, order status APIs</td><td>Contract-driven integration with explicit fallback/error handling.</td></tr>
+    <tr><td>Domain Services</td><td>Catalog/Hybris, search index, pricing, availability, promotions, quote, order management, support diagnostics</td><td>Source-of-truth ownership must be documented by domain.</td></tr>
+    <tr><td>Enterprise Systems</td><td>ERP, inventory, order database, CRM/support tooling, analytics warehouse</td><td>Downstream integrations require performance, resiliency, and reconciliation checks.</td></tr>
+    <tr><td>Control Plane</td><td>Identity, security, privacy, consent/cookies, feature flags, monitoring, alerts</td><td>Required for secure rollout, compliance, and operational readiness.</td></tr>
+  </table>
+
+  <h2>Architecture Flow</h2>
+  <table>
+    <tr><th style="width: 20%;">Flow</th><th>Description</th></tr>
+    <tr><td>Discovery Flow</td><td>User context and search query drive eligible product results through search index and platform product APIs.</td></tr>
+    <tr><td>PDP Flow</td><td>PDP loads catalog content, package data, lifecycle state, price, availability, and product-specific commerce actions.</td></tr>
+    <tr><td>Cart Flow</td><td>Selected SKU, quantity, price, availability, promotions, and validation rules determine cart state.</td></tr>
+    <tr><td>Checkout Flow</td><td>Customer, shipping, billing, quote, and order details are validated and submitted to downstream order systems.</td></tr>
+    <tr><td>Post-Purchase Flow</td><td>Order confirmation, status updates, quote/order references, and support context are stored and surfaced to users and support teams.</td></tr>
+  </table>
+
+  <h1>Feature Information</h1>
+  <table>
+    <tr><th style="width: 24%;">Feature</th><th>Benefit Hypothesis</th><th style="width: 18%;">Jira Ticket Link</th><th style="width: 12%;">ROM</th><th style="width: 16%;">Estimated Start</th></tr>
+    <tr><td>Identity and Account Context</td><td>Correct user, country, and account context improves entitlement, pricing, and orderability accuracy.</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+    <tr><td>Catalog, Search, and PDP</td><td>Accurate product data and consistent PDP behavior improve discovery and purchase confidence.</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+    <tr><td>Pricing and Availability</td><td>Reliable price and stock visibility reduces support contacts and conversion friction.</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+    <tr><td>Cart and Checkout</td><td>Validated cart and checkout flows increase order completion and reduce failed submissions.</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+    <tr><td>Post Purchase and Support</td><td>Clear order status and support diagnostics improve self-service and customer support resolution.</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+    <tr><td>Analytics and Monitoring</td><td>End-to-end measurement enables release confidence, operational response, and product optimization.</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+  </table>
+
+  <h1>ART and Team Dependencies</h1>
+  <table>
+    <tr><th style="width: 22%;">Development Team</th><th style="width: 14%;">Dev Required</th><th>Details</th><th style="width: 20%;">Service/System</th><th style="width: 18%;">Team Product Owner</th></tr>
+    <tr><td>Accounts / Identity</td><td>Yes</td><td>Login, registration, account context, entitlement propagation, session handling.</td><td>Identity, Accounts Dashboard</td><td>TBD</td></tr>
+    <tr><td>Catalog / Hybris</td><td>Yes</td><td>Product data, attributes, images, localization, notices, lifecycle states.</td><td>Hybris, Catalog Data</td><td>TBD</td></tr>
+    <tr><td>Platform API</td><td>Yes</td><td>Core product attributes, entitlement, SKU/package mapping, price/availability inputs.</td><td>Platform API</td><td>TBD</td></tr>
+    <tr><td>Search</td><td>Yes</td><td>Search index, filters, ranking, visibility, no-result handling.</td><td>Search / Solr</td><td>TBD</td></tr>
+    <tr><td>PDP / Magellan</td><td>Yes</td><td>Product detail display, package selector, lifecycle banners, commerce card.</td><td>Magellan PDP</td><td>TBD</td></tr>
+    <tr><td>Pricing / Availability</td><td>Yes</td><td>SKU/account/country pricing, stock, estimated availability, fallback behavior.</td><td>Pricing, Availability</td><td>TBD</td></tr>
+    <tr><td>Cart</td><td>Yes</td><td>Add, update, validation, messages, totals, promotions, checkout handoff.</td><td>Cart</td><td>TBD</td></tr>
+    <tr><td>Checkout</td><td>Yes</td><td>Shipping, billing, quote, order submission, downstream integrations.</td><td>Checkout, Order APIs</td><td>TBD</td></tr>
+    <tr><td>Post Purchase</td><td>Yes</td><td>Order confirmation, order history, status, quote/order references.</td><td>Post Purchase</td><td>TBD</td></tr>
+    <tr><td>Analytics</td><td>Yes</td><td>Event tracking, dashboards, release validation, error taxonomy.</td><td>Analytics Platform</td><td>TBD</td></tr>
+    <tr><td>CIS / Compliance</td><td>Review</td><td>Security, privacy, cookie, accessibility, legal notices, risk assessment.</td><td>CIS / Legal</td><td>TBD</td></tr>
+  </table>
+
+  <h1>Solution Review Handoff</h1>
+  <table>
+    <tr><th style="width: 12%;">Complete?</th><th>Review Item</th><th style="width: 24%;">Owner</th></tr>
+    <tr><td>[ ]</td><td>Solution review with Product Manager - review and sign-off.</td><td>Product</td></tr>
+    <tr><td>[ ]</td><td>Architecture review and sign-off.</td><td>Architecture</td></tr>
+    <tr><td>[ ]</td><td>End-to-end testing sign-off including analytics and customer support paths.</td><td>QA / Analytics / Support</td></tr>
+    <tr><td>[ ]</td><td>UX review and accessibility validation.</td><td>UX / Accessibility</td></tr>
+    <tr><td>[ ]</td><td>Security, privacy, legal, and compliance review.</td><td>CIS / Legal / Compliance</td></tr>
+    <tr><td>[ ]</td><td>Product owner review and backlog readiness confirmation.</td><td>IT Product Owners</td></tr>
+    <tr><td>[ ]</td><td>RTE informed of solution review completion.</td><td>RTE</td></tr>
+    <tr><td>[ ]</td><td>Engineering Manager informed of solution review completion.</td><td>Engineering</td></tr>
+    <tr><td>[ ]</td><td>WSJF/backlog state updated to Ready for Backlog when applicable.</td><td>Product / RTE</td></tr>
+  </table>
+
+  <h1>Supplementary Information</h1>
+  <h2>Analytics and Reporting</h2>
+  <ul>
+    <li>Required funnel events: search, result click, PDP view, package change, price lookup, availability lookup, Add to Cart, cart update, checkout step, order submit, quote submit, order confirmation, support contact, and error/fallback states.</li>
+    <li>Required dimensions: country, language, login state, account type, SKU, package, product family, ERP/system context, price action, availability status, cart state, checkout step, and error code.</li>
+    <li>Dashboards should show funnel conversion, service errors, latency, fallback usage, checkout abandonment, order submission outcomes, and support path utilization.</li>
+  </ul>
+
+  <h2>Non-Functional Requirements</h2>
+  <table>
+    <tr><th style="width: 24%;">NFR Area</th><th>Expectation</th></tr>
+    <tr><td>Performance</td><td>Search, PDP, cart, and checkout must meet agreed page load and API response thresholds under expected load.</td></tr>
+    <tr><td>Availability</td><td>Critical commerce services must have monitoring, alerting, fallback behavior, and incident ownership.</td></tr>
+    <tr><td>Security</td><td>Identity, authorization, secure session handling, and sensitive customer/order data controls must pass CIS review.</td></tr>
+    <tr><td>Privacy</td><td>Cookie, consent, tracking, and customer-data processing must follow approved privacy requirements.</td></tr>
+    <tr><td>Accessibility</td><td>Customer-facing experiences must follow agreed accessibility standards and be validated in release readiness.</td></tr>
+    <tr><td>Observability</td><td>Logs, metrics, traces, and business events must support issue diagnosis across the commerce journey.</td></tr>
+  </table>
+
+  <h2>Alternative Solutions Explored</h2>
+  <table>
+    <tr><th style="width: 28%;">Alternative</th><th>Assessment</th><th style="width: 18%;">Recommendation</th></tr>
+    <tr><td>Build new ECom flows from scratch</td><td>High cost and risk; duplicates existing TF ECom platform capabilities.</td><td>Not recommended</td></tr>
+    <tr><td>Reuse existing TF ECom patterns with targeted enhancements</td><td>Lower delivery risk, preserves familiar UX, and aligns with existing services.</td><td>Recommended</td></tr>
+    <tr><td>Region-specific custom implementations</td><td>May solve local needs quickly but increases maintenance and inconsistent customer experience.</td><td>Use only when required</td></tr>
+  </table>
+
+  <p class="small">Revision date: 26 June 2026. Draft prepared from provided template and source document context. Names, Jira links, estimates, and final NFR targets are placeholders until confirmed by stakeholders.</p>
+</body>
+</html>

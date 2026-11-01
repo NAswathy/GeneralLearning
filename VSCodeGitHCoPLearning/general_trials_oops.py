@@ -274,3 +274,16 @@ print(my_bike.start_engine())
 print(my_bike.stop_engine())
 print (my_bike.wheels) 
 
+#Scope practise
+
+a=10
+print("Local scope a is {}" .format(a))
+print(f"local scope is {a}")
+print (a )
+def fun():
+    global a
+    a=20
+    
+fun()
+print(a)
+

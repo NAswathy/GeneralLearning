@@ -7,9 +7,9 @@ class Vehicle():
         self.brand=brand
 
     def movement(self):
-        return f"{self.types} can move from one palce to another"
+        return f"{self.types} {self.brand} can move from one palce to another"
     def fuelReq(self):
-        return f"{self.types} can move from one palce to another due to some mechanical energy"
+        return f"{self.types} {self.brand} can move from one palce to another due to some mechanical energy"
     
 
 
@@ -21,21 +21,21 @@ class Car(Vehicle):
         self.brand=brand
 
     def movement(self):
-        return f"{self.types} can be driven from one palce to another"
+        return f"{self.types} {self.brand} can be driven from one palce to another"
     def fuelReq(self):
-        return f"{self.types} can move from one palce to another due to fuel ie petrol or diesel burning energy"
+        return f"{self.types} {self.brand} can move from one palce to another due to fuel ie petrol or diesel burning energy"
 
     
 
 class Cycle(Vehicle):
     def __init__(self, types,wheels,brand):
-        
-        self.types="passenger"
+       # super().__init__(types,wheels,brand)
+        self.types=types
         self.wheels=2
         self.brand=brand
 
     def movement(self):
-        return f"{self.types} can be rode from one palce to another"
+        return f"{self.types} {self.brand} can be rode from one palce to another"
 
 
 
@@ -48,5 +48,5 @@ print (c1.movement())
 print (c1.fuelReq())
 print (c2.fuelReq())
 b1=Cycle("bicycle",2,"Decathlon")
-b1.movement()
-b1.fuelReq()
+print(b1.movement())
+print(b1.fuelReq())

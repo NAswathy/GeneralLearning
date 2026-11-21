@@ -238,3 +238,95 @@ a,b=1,2
 print (type((5,)))
 print (type((5)))
 
+line = "hello"
+print(f"{line!r:16} ->{'Myname'}")
+print(f"{line:16} ->{'Myname'}")
+#output 'hello'          ->Myname # !r is for repr() representation, which includes quotes around the string. The :16 specifies a minimum width of 16 characters, so the output is right-padded with spaces to meet that width.
+
+x=[1,4,2,8,3]
+new_df=pd.DataFrame()
+
+def squares(x):
+    return x**2
+import pandas as pd
+
+df= pd.DataFrame(data=x, columns=['Numbers'])
+df['Squares'] = df['Numbers'].apply(lambda x: x**2)
+df['Squares1'] = df['Numbers'].apply(lambda x: squares(x))
+#print (df)
+df['sqre']=df['Numbers'].apply(squares)
+print (new_df) 
+print (df)
+
+x=[[1,5,3,9],[2,4,6,8],[3,5,7,9]]
+y=sum(set([a for b in x for a in b]))
+print (y)
+nums=[1,5,3]
+b=(n * n for n in nums) #( gives generator expression which produces values one at a time instead of building the whole result in memory.)
+b=[n * n for n in nums]
+print (b)
+
+d={"a": 1, "b": 2, "c": 3}
+squared_values = {key: value ** 2 for key, value in d.items()}
+print(squared_values)  # Output: {'a': 1, 'b': 4, 'c': 9}
+swapp_k_v = {value: key for key, value in d.items()}
+print(swapp_k_v)  # Output: {1: 'a', 2: 'b', 3: 'c'}
+
+#when you have same key and multiple values, the last value will be retained in the dictionary. To handle this, you can use a defaultdict or a regular dictionary with lists as values.
+rows = [("ana", "red"), ("bo", "blue"), ("cy", "red"), ("ana", "green"), ("bo", "yellow")]
+
+team_of = {name: team for name, team in rows}
+print(team_of["cy"])
+
+by_team = {}
+by_color = {}
+for name, team in rows:
+    by_team.setdefault(team, []).append(name)
+    by_color.setdefault(name, []).append(team)
+print(by_team)
+print(by_color)
+
+#The frozenset() function in Python creates an immutable set from an iterable. It stores only unique values and does not allow modification after creation. Since it is immutable, a frozenset can be used as a dictionary key or as an element of another set.
+a = frozenset(["cat", "dog", "lion"])
+print("cat" in a) #true
+print("elephant" in a) #false
+
+f=set(["cat", "dog", "lion"])
+f.add("elephant")
+print(f)
+#{} is an empty dict. There is no empty-set literal, so set() is the only way to write one.
+#The names in the def line are parameters. The values you pass when calling are the arguments.
+
+def argumentTypes(a, b, c=10, *args, **kwargs):
+    print(f"Positional arguments: a={a}, b={b}, c={c}")
+    print(f"Additional positional arguments (args): {args}")
+    print(f"Keyword arguments (kwargs): {kwargs}")
+
+
+argumentTypes(1, 2, 3, 4, 5, x=10, y=20)
+
+
+# map applies a function to every item.
+nums = [1, 2, 3, 4]
+print()
+print("map      :", list(map(lambda n: n * n, nums)))
+print("comprehension:", [n * n for n in nums])
+# filter keeps the items where it returns True.
+print("filter   :", list(filter(lambda n: n % 2 == 0, nums)))
+print("comprehension:", [n for n in nums if n % 2 == 0])
+
+ok = lambda n: n if n > 0 else 0
+print("conditional in a lambda:", [ok(n) for n in (-2, 3)])
+
+#When Python meets a name, it looks in four places in a fixed order. Local, enclosing, global, builtin. And stops at the first one that has it. Almost each scope surprise comes from one rule about set.
+
+print(int("10"), int("0x10", 16), int("0b10", 2), int("0o10", 8), int('a', 16))
+
+'''
+Module: Single .py file with code (functions, classes, variables). eg.random, math
+Package: Directory of modules with __init__.py, can contain sub-packages.
+__init__.py for? It marks a directory as a package and runs when the package is imported. It can be empty, and since Python 3.3 a package without one mostly works — but including it avoids surprises. eg from my_model import my_submodule
+Library: Collection of modules and packages providing reusable functionality. eg. pandas, numpy, scikit-learn
+Understanding these distinctions helps in organizing Python projects efficiently and leveraging existing code for faster development
+library>package>module
+'''

@@ -32,8 +32,6 @@ try:
 except Exception as e:
     print(f"Error!- {e}")
 
-
-
 def divide(a, b):
     if b == 0:
         raise ValueError("Cannot divide by zero")

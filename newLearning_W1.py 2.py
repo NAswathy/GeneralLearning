@@ -45,10 +45,9 @@ try:
     n2= int(input("Enter second number: "))
     result = divide(n1,n2)
     print(f"Result: {result}")
-except ValueError as e:
+except Exception as e:
     print(f"Error: {e}")   
 else:
-    
     print("The numbers were fine for division.")
 finally:
     print("Execution completed with or without handling errors.")

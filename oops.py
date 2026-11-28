@@ -9,7 +9,7 @@ class Vehicle():
     def movement(self):
         return f"{self.types} {self.brand} can move from one palce to another"
     def fuelReq(self):
-        return f"{self.types} {self.brand} can move from one palce to another due to some mechanical energy"
+        return f"{self.types} {self.brand} can move from one palce to another due to some mechanical or chemical energy"
     
 
 
@@ -47,6 +47,9 @@ c2=Car("hackback",4,"Hyundai-i10")
 print (c1.movement())
 print (c1.fuelReq())
 print (c2.fuelReq())
+print (c1.wheels)
+print(c1)
 b1=Cycle("bicycle",2,"Decathlon")
 print(b1.movement())
 print(b1.fuelReq())
+print (b1.types)

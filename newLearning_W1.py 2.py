@@ -18,6 +18,7 @@ title="Ms"
 ageLimit=18
 print (f"Hello {title}.{name}! How are you?")
 print ("Hello {title}.{name}! How are you?".format(title=title, name=name))
+print ("Hello {}.{}! How are you?".format(title, name))
 print ("Hello %s.%s! Are you above %d?" % (title, name, ageLimit))
 
 def add(a, b):
@@ -131,6 +132,7 @@ words = ["banana", "fig", "cherry", "kiwi", "apple", "grape", "orange"]
 print("default   :", sorted(words))                 # default sort
 print("by length :", sorted(words,key=len))     # by a computed value
 print("longest   :", sorted(words, key=len, reverse=True))
+print("last char sort   :", sorted(words, key=lambda x:x[-1], reverse=True))
 
 # key takes a function of one item, returning what to sort ON.
 print()
@@ -174,7 +176,7 @@ print("get with default:", prices.get("kiwi", 0))
 # Iterating: keys, values, or both.
 print()
 print("keys  :", list(prices.keys()))
-print("values:", list(prices.values()))
+print("sum of values:", sum(prices.values()))
 for k, v in prices.items():
     print(f"  {k:6} {v}")
 
